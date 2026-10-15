@@ -12,6 +12,7 @@ A personal portfolio showcasing my web projects, technical skills, and backgroun
 
 - **VERSA Learning** — [Open live site](https://versa-learning.vercel.app/)
 - **Chessroom** — [Open live site](https://chessroom-source.vercel.app/)
+- **Invoker Lab** — [Play Invoker Lab](https://jhon-guiller-barenio-portfiolio-v2.vercel.app/projects/invoker-lab/) · [View source](projects/invoker-lab/)
 - **Café Noir** — [Open website](https://cafe-noir-xi.vercel.app/) · [Admin panel](https://cafe-noir-xi.vercel.app/admin)
 - **Arduino Smart Fan** — An indoor prototype that reads temperature with an LM35 sensor and adjusts fan speed through an L293D driver.
 
