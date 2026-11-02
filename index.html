@@ -103,36 +103,105 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
  .project-rail button,.hero h1 span{transition:none}
 }
 
+ 
+/* Third-party 3D planet viewer with scroll-driven project chapters */
+.hero{height:calc(600svh + 42px);min-height:0;max-height:none;position:relative;overflow:visible;background:#030509;isolation:isolate}
+.hero:after{display:none}
+.solar-stage{position:sticky;top:0;width:100%;height:100svh;min-height:560px;overflow:hidden;isolation:isolate;background:#030509}
+.planet-viewer{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:0;background:#030509;opacity:0;transition:opacity .55s ease}
+.planet-viewer.loaded{opacity:1}
+.solar-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#020306f5 0%,#020306e8 23%,#020306a8 43%,transparent 73%),linear-gradient(0deg,#020306bd 0%,transparent 22%); }
+.scroll-capture{position:absolute;left:0;top:0;bottom:0;width:46%;z-index:2;pointer-events:auto;background:transparent}
+.hero .hero-copy{position:absolute;z-index:3;top:50%;left:clamp(26px,7vw,120px);transform:translateY(-50%);width:min(520px,40vw);max-width:520px;pointer-events:auto}
+.hero-copy .eyebrow{font-size:.68rem;letter-spacing:.18em;color:#a9b4c7;margin-bottom:26px}
+.hero-copy .eyebrow span{color:var(--cyan)}
+.hero h1{font-size:clamp(3.3rem,6.6vw,7.4rem);line-height:.94;letter-spacing:-.085em;font-weight:500;margin:0 0 26px;overflow-wrap:anywhere}
+.hero h1 span{display:inline-block;color:#e8eef9;font-size:.66em;vertical-align:10%;margin-left:.08em}
+.hero-copy p{max-width:390px;color:#aab5c6;font-size:clamp(.9rem,1.2vw,1.05rem);line-height:1.8;min-height:4.8em;margin:0}
+.hero .hero-actions{margin-top:28px;pointer-events:auto}
+.hero .button{border-radius:3px;padding:14px 18px;letter-spacing:.01em}
+.hero .button.ghost{background:#ffffff08}
+.hero-note{margin-top:34px;font:.62rem var(--mono);letter-spacing:.09em;color:#8793a7}
+.hero-note span{color:var(--cyan)}
+.project-rail{position:absolute;z-index:5;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:5px;align-items:center;max-width:min(92vw,760px);padding:7px;border:1px solid #ffffff25;border-radius:4px;background:#080b12d9;backdrop-filter:blur(18px);overflow-x:auto;scrollbar-width:none}
+.project-rail::-webkit-scrollbar{display:none}
+.project-rail button{flex:0 0 auto;border:0;background:transparent;color:#aab5c6;padding:9px 11px;border-radius:2px;font:.65rem var(--mono);white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
+.project-rail button span{color:#69778e;margin-right:8px}
+.project-rail button[aria-pressed=true],.project-rail button:hover{background:#ffffff12;color:#fff}
+.project-rail button[aria-pressed=true] span{color:var(--cyan)}
+.bottom-hint{position:absolute;z-index:4;left:clamp(18px,3vw,44px);bottom:34px;color:#818da0;font:.6rem var(--mono);letter-spacing:.08em;pointer-events:none}
+.bottom-hint span{color:var(--cyan);font-size:.9rem;margin-right:8px}
+.scroll-marker{position:absolute;z-index:4;right:clamp(18px,4vw,58px);top:50%;height:120px;width:1px;background:#ffffff25;transform:translateY(-50%);pointer-events:none}
+.scroll-marker span{position:absolute;top:0;left:-1px;width:3px;height:25px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);transform:translateY(var(--scroll-marker,0))}
+.load-note{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);font:.67rem var(--mono);color:#9aa9be;pointer-events:none;transition:opacity .3s}
+.solar-credit{height:42px;display:flex;align-items:center;justify-content:center;background:#030509;color:#7c8799;font:.62rem var(--mono);letter-spacing:.04em}
+.solar-credit a{color:var(--cyan);margin-left:5px;text-decoration:underline;text-underline-offset:3px}
+.project-label,.hud,.controls,.planet-info{display:none!important}
+@media(max-width:900px){
+ .solar-shade{background:linear-gradient(180deg,#020306ed 0%,#020306bf 34%,transparent 75%),linear-gradient(0deg,#020306df 0%,transparent 38%)}
+ .scroll-capture{width:100%;height:47%;bottom:auto}
+ .hero .hero-copy{top:11%;left:24px;transform:none;width:min(80%,560px)}
+ .hero-copy .eyebrow{margin-bottom:18px}
+ .hero h1{font-size:clamp(3.1rem,9vw,5.3rem);margin-bottom:14px}
+ .hero-copy p{font-size:.88rem;line-height:1.6;min-height:0;max-width:520px}
+ .hero .hero-actions{margin-top:17px}
+ .hero-note{margin-top:18px}
+ .project-rail{bottom:24px;max-width:calc(100% - 28px);left:14px;right:14px;transform:none;justify-content:flex-start}
+ .project-rail button{padding:9px 10px;font-size:.61rem}
+ .bottom-hint{bottom:84px;left:18px;font-size:.54rem}
+ .scroll-marker{right:12px;height:82px;top:56%}
+ .planet-viewer{pointer-events:none}
+}
+@media(max-width:600px){
+ .hero{height:calc(600svh + 42px)}
+ .solar-stage{min-height:620px}
+ .hero .hero-copy{top:12%;left:19px;width:calc(100% - 48px)}
+ .hero-copy .eyebrow{font-size:.59rem;letter-spacing:.13em;margin-bottom:16px}
+ .hero h1{font-size:clamp(2.8rem,12vw,4.1rem);line-height:.96;max-width:100%;margin-bottom:12px}
+ .hero-copy p{max-width:94%;font-size:.8rem;line-height:1.55}
+ .hero .hero-actions{gap:8px;margin-top:15px}
+ .hero .button{font-size:.68rem;padding:11px 13px}
+ .hero-note{font-size:.52rem;margin-top:16px;letter-spacing:.04em}
+ .project-rail{bottom:18px;padding:5px;gap:2px}
+ .project-rail button{font-size:.56rem;padding:9px 8px}
+ .project-rail button span{margin-right:5px}
+ .bottom-hint{display:none}
+ .scroll-marker{display:none}
+}
+@media(prefers-reduced-motion:reduce){.project-rail button,.planet-viewer{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap head"><a class="brand" href="#top">JGB<span>.</span></a><nav class="nav" aria-label="Main navigation"><a href="#work" class="active">Work</a><a href="#skills">Skills</a><a href="#about">About</a><a href="#contact">Contact</a></nav><div class="head-right"><span class="status">Available for opportunities</span><button class="theme" type="button">LIGHT MODE</button></div></div></header>
 <main id="top">
-<section class="hero" id="solar" aria-label="Selected projects, scroll to explore">
-  <div class="solar-stage" id="solar-stage">
-    <div class="load-note" id="load-note">Preparing the project universe…<br><small>Loading real-time 3D scene</small></div>
-    <canvas id="solar-canvas" aria-label="Interactive 3D project planets. Scroll to travel between projects and drag horizontally to rotate the view."></canvas>
-    <div class="hero-copy">
-      <div class="eyebrow">SELECTED WORK / <span id="project-count">01 / 06</span></div>
-      <h1 id="project-title">VERSA Learning <span aria-hidden="true">↗</span></h1>
-      <p id="project-description">An interactive English-learning platform with lessons, pronunciation practice, and quizzes.</p>
-      <div class="hero-actions">
-        <a class="button" id="project-link" href="https://versa-learning.vercel.app/" target="_blank" rel="noopener">View project ↗</a>
-        <a class="button ghost" href="mailto:jhonguillerbarenio@gmail.com">Let's talk ↗</a>
-      </div>
-      <div class="hero-note"><span>SCROLL</span> TRAVEL BETWEEN WORLDS &nbsp;·&nbsp; <span>DRAG</span> ROTATE THE VIEW</div>
-    </div>
-    <div class="project-rail" id="project-rail" role="group" aria-label="Jump to a project">
-      <button type="button" data-project="0" aria-label="Go to project 1, VERSA" aria-pressed="true"><span>01</span>VERSA</button>
-      <button type="button" data-project="1" aria-label="Go to project 2, Chessroom" aria-pressed="false"><span>02</span>Chessroom</button>
-      <button type="button" data-project="2" aria-label="Go to project 3, Café Noir" aria-pressed="false"><span>03</span>Café Noir</button>
-      <button type="button" data-project="3" aria-label="Go to project 4, SakuraSound" aria-pressed="false"><span>04</span>SakuraSound</button>
-      <button type="button" data-project="4" aria-label="Go to project 5, Invoker Lab" aria-pressed="false"><span>05</span>Invoker Lab</button>
-      <button type="button" data-project="5" aria-label="Go to project 6, Arduino Smart Fan" aria-pressed="false"><span>06</span>Smart Fan</button>
-    </div>
-    <div class="bottom-hint"><span>↓</span> SCROLL TO EXPLORE · EACH WORLD HAS ITS OWN STORY</div>
-    <div class="scroll-marker" aria-hidden="true"><span></span></div>
+<section class="hero" id="solar" aria-label="Selected projects, scroll to travel between planets">
+ <div class="solar-stage" id="solar-stage">
+  <iframe id="planet-viewer" class="planet-viewer" title="Interactive 3D Solar System by Mzu 3D Solar System" src="https://www.3dsolarsystem.net/?focus=Mercury" loading="eager" allow="fullscreen; accelerometer; gyroscope" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <div class="solar-shade" aria-hidden="true"></div>
+  <div class="scroll-capture" aria-hidden="true"></div>
+  <div class="load-note" id="load-note">Loading the 3D solar system…</div>
+  <div class="hero-copy">
+   <div class="eyebrow">SELECTED WORK / <span id="project-count">01 / 06</span></div>
+   <h1 id="project-title">VERSA Learning <span aria-hidden="true">↗</span></h1>
+   <p id="project-description">An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.</p>
+   <div class="hero-actions">
+    <a class="button" id="project-link" href="https://versa-learning.vercel.app/" target="_blank" rel="noopener">View project ↗</a>
+    <a class="button ghost" href="mailto:jhonguillerbarenio@gmail.com">Let's talk ↗</a>
+   </div>
+   <div class="hero-note"><span>SCROLL</span> TO THE NEXT WORLD &nbsp;·&nbsp; <span>DRAG</span> TO EXPLORE THE 3D MODEL</div>
   </div>
+  <div class="project-rail" id="project-rail" role="group" aria-label="Jump to a project">
+   <button type="button" data-project="0" aria-pressed="true"><span>01</span>VERSA</button>
+   <button type="button" data-project="1" aria-pressed="false"><span>02</span>Chessroom</button>
+   <button type="button" data-project="2" aria-pressed="false"><span>03</span>Café Noir</button>
+   <button type="button" data-project="3" aria-pressed="false"><span>04</span>SakuraSound</button>
+   <button type="button" data-project="4" aria-pressed="false"><span>05</span>Invoker Lab</button>
+   <button type="button" data-project="5" aria-pressed="false"><span>06</span>Smart Fan</button>
+  </div>
+  <div class="bottom-hint"><span>↓</span> SCROLL TO EXPLORE · EACH WORLD HAS ITS OWN STORY</div>
+  <div class="scroll-marker" aria-hidden="true"><span></span></div>
+ </div>
+ <div class="solar-credit">Interactive solar system by <a href="https://www.3dsolarsystem.net/" target="_blank" rel="noopener">Mzu 3D Solar System ↗</a></div>
 </section>
 <div class="marquee"><div class="marquee-track"><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span></div></div>
 <section class="wrap section" id="work"><div class="section-head reveal"><div><div class="eyebrow">A closer look</div><h2>Selected projects<span style="color:var(--cyan)">.</span></h2></div><span class="section-number">01 — 06</span></div><div class="project-grid">
@@ -149,283 +218,84 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 <section class="wrap section" id="contact"><div class="contact reveal"><div><div class="eyebrow">Have an idea?</div><h2>Let's make<br>it work.</h2><p>Open to conversations about web development, IT opportunities, and creative projects.</p></div><a class="contact-email" href="mailto:jhonguillerbarenio@gmail.com">jhonguillerbarenio@gmail.com ↗</a></div></section></main>
 <footer class="wrap footer"><span>© <span id="year"></span> Jhon Guiller Barenio</span><div class="footer-links"><a href="https://github.com/jhon-guiller-barenio" target="_blank" rel="noopener">GitHub ↗</a><a href="mailto:jhonguillerbarenio@gmail.com">Email ↗</a><a href="#top">Back to top ↑</a></div></footer>
 <script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js';
-
-const canvas=document.getElementById('solar-canvas');
 const hero=document.getElementById('solar');
 const stage=document.getElementById('solar-stage');
+const viewer=document.getElementById('planet-viewer');
 const loadNote=document.getElementById('load-note');
 const titleEl=document.getElementById('project-title');
 const countEl=document.getElementById('project-count');
 const descriptionEl=document.getElementById('project-description');
 const linkEl=document.getElementById('project-link');
 const railButtons=[...document.querySelectorAll('[data-project]')];
-const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const data=[
- {name:'VERSA Learning',kind:'LEARNING PLATFORM',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/',palette:'earth',r:3.2,orbit:13,angle:.4,seed:7,atmosphere:0x7dcfff},
- {name:'Chessroom',kind:'MULTIPLAYER GAME',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/',palette:'ice',r:3.7,orbit:21,angle:2.1,seed:18,ring:true,atmosphere:0xa3c8ff},
- {name:'Café Noir',kind:'CAFE WEBSITE',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/',palette:'gold',r:4.1,orbit:30,angle:3.7,seed:29,atmosphere:0xffd6a0},
- {name:'SakuraSound',kind:'MUSIC DISCOVERY',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/',palette:'purple',r:3.6,orbit:40,angle:5.4,seed:41,atmosphere:0xb99bff},
- {name:'Invoker Lab',kind:'BROWSER GAME',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/',palette:'red',r:3.1,orbit:49,angle:1.3,seed:54,atmosphere:0xff9675},
- {name:'Arduino Smart Fan',kind:'HARDWARE + SOFTWARE',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null,palette:'steel',r:4.0,orbit:58,angle:4.5,seed:66,ring:true}
+const worlds=['Mercury','Venus','Earth','Mars','Jupiter','Saturn'];
+const projects=[
+ {name:'VERSA Learning',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/'},
+ {name:'Chessroom',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/'},
+ {name:'Café Noir',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/'},
+ {name:'SakuraSound',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/'},
+ {name:'Invoker Lab',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/'},
+ {name:'Arduino Smart Fan',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null}
 ];
-hero.style.height=(data.length*100)+'svh';
-
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.2:1.65));
-renderer.setSize(stage.clientWidth,stage.clientHeight,false);
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.12;
-
-const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x03060c,.0011);
-const camera=new THREE.PerspectiveCamera(43,stage.clientWidth/stage.clientHeight,.1,1600);
-scene.add(new THREE.AmbientLight(0x8fa9d4,.72));
-const keyLight=new THREE.PointLight(0xffe0b4,1900,850,1.6);
-keyLight.position.set(-35,48,46);scene.add(keyLight);
-const rimLight=new THREE.PointLight(0x657eff,1250,700,1.7);
-rimLight.position.set(38,12,-38);scene.add(rimLight);
-const fillLight=new THREE.PointLight(0x58dce7,620,500,1.8);
-fillLight.position.set(-45,-20,-10);scene.add(fillLight);
-
-const system=new THREE.Group();scene.add(system);
-const planets=[];
-const raycaster=new THREE.Raycaster();
-const pointer=new THREE.Vector2();
-const cameraTarget=new THREE.Vector3();
-const focusTarget=new THREE.Vector3();
-const cameraRight=new THREE.Vector3();
-let rotX=.12,rotY=.12,zoom=1,targetZoom=1;
-let timelineProgress=0,activeIndex=0,lastActiveIndex=-1;
-let dragState=null,dragged=false;
-let scrollFrame=0;
-
-function seeded(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)}
-const palettes={
- earth:['#102f46','#1a526b','#347f7e','#75a99a','#b5c6b5','#263e5d'],
- ice:['#17213c','#293c61','#536d9c','#8fa8d1','#d1d9e9','#39435f'],
- gold:['#2b201d','#594231','#86623e','#bf925a','#e2c18a','#423c3b'],
- purple:['#191731','#302a59','#51447c','#7963ab','#b2a0db','#3b345d'],
- red:['#291923','#572839','#8c3b4c','#bd5c55','#e29a78','#453247'],
- steel:['#172b38','#294755','#456776','#7295a0','#b3c7c4','#34404e']
-};
-
-function makeFacetGeometry(radius,seed,palette){
- const geo=new THREE.IcosahedronGeometry(radius,2).toNonIndexed();
- const pos=geo.attributes.position;
- for(let i=0;i<pos.count;i++){
-  const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);
-  const key=Math.round(x*997)+Math.round(y*991)*7+Math.round(z*983)*13;
-  const factor=.91+seeded(seed+key)*.19;
-  pos.setXYZ(i,x*factor,y*factor,z*factor);
- }
- geo.computeVertexNormals();
- const colors=[];
- for(let i=0;i<pos.count;i+=3){
-  const shade=palette[Math.floor(seeded(seed+i*1.73)*palette.length)];
-  const c=new THREE.Color(shade);
-  const variation=.78+seeded(seed+i*2.31)*.36;
-  c.multiplyScalar(variation);
-  for(let v=0;v<3;v++)colors.push(c.r,c.g,c.b);
- }
- geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
- geo.computeBoundingSphere();
- return geo;
-}
-function addOrbit(radius,angle){
- const pts=[];
- for(let i=0;i<=300;i++){
-  const a=i/300*Math.PI*2;
-  pts.push(new THREE.Vector3(Math.cos(a)*radius,Math.sin(a)*radius*.12,Math.sin(a)*radius*.7));
- }
- const line=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x8096b6,transparent:true,opacity:.12}));
- line.rotation.y=angle*.08;system.add(line);
-}
-function addPlanet(d,i){
- const pivot=new THREE.Group();
- const x=Math.cos(d.angle)*d.orbit;
- const z=Math.sin(d.angle)*d.orbit*.68;
- const y=Math.sin(d.angle*1.7)*d.orbit*.12;
- pivot.position.set(x,y,z);
- system.add(pivot);
- const geo=makeFacetGeometry(d.r,d.seed,palettes[d.palette]);
- const material=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.62,metalness:.2,flatShading:true});
- const mesh=new THREE.Mesh(geo,material);
- mesh.rotation.set(seeded(d.seed)*.4,seeded(d.seed+2)*Math.PI,seeded(d.seed+4)*.4);
- mesh.userData.projectIndex=i;
- mesh.castShadow=false;mesh.receiveShadow=true;
- pivot.add(mesh);
- const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,16),new THREE.LineBasicMaterial({color:0x101827,transparent:true,opacity:.62}));
- mesh.add(edges);
- if(d.atmosphere){
-  const shell=new THREE.Mesh(new THREE.IcosahedronGeometry(d.r*1.055,2),new THREE.MeshBasicMaterial({color:d.atmosphere,transparent:true,opacity:.045,side:THREE.BackSide}));
-  pivot.add(shell);
- }
- if(d.ring){
-  const ring=new THREE.Mesh(new THREE.RingGeometry(d.r*1.35,d.r*2.05,96),new THREE.MeshStandardMaterial({color:0xb4c5d6,roughness:.88,metalness:.12,side:THREE.DoubleSide,transparent:true,opacity:.48}));
-  ring.rotation.set(Math.PI/2.35,.2,.18);pivot.add(ring);
- }
- const p={...d,pivot,mesh,basePosition:pivot.position.clone()};
- planets.push(p);
- addOrbit(d.orbit,d.angle);
- return p;
-}
-data.forEach(addPlanet);
-
-// A small 3D sun and distant orbital debris keep the project worlds inside one universe.
-const sun=new THREE.Mesh(new THREE.IcosahedronGeometry(5.6,3),new THREE.MeshBasicMaterial({color:0xffd59b}));
-sun.position.set(0,0,0);system.add(sun);
-const coronaCanvas=document.createElement('canvas');coronaCanvas.width=coronaCanvas.height=256;
-const cc=coronaCanvas.getContext('2d');
-const gradient=cc.createRadialGradient(128,128,5,128,128,128);
-gradient.addColorStop(0,'#fff3d5dd');gradient.addColorStop(.2,'#ffbd5988');gradient.addColorStop(.5,'#ef85312b');gradient.addColorStop(1,'#ef853100');
-cc.fillStyle=gradient;cc.fillRect(0,0,256,256);
-const coronaTexture=new THREE.CanvasTexture(coronaCanvas);coronaTexture.colorSpace=THREE.SRGBColorSpace;
-const corona=new THREE.Sprite(new THREE.SpriteMaterial({map:coronaTexture,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
-corona.scale.set(32,32,1);sun.add(corona);
-
-const starPositions=[],starColors=[];
-for(let i=0;i<5200;i++){
- const r=110+Math.random()*650,theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1);
- starPositions.push(r*Math.sin(phi)*Math.cos(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(theta));
- const v=.45+Math.random()*.55;starColors.push(v*.78,v*.88,v);
-}
-const starGeometry=new THREE.BufferGeometry();
-starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));
-starGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
-const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:.72,vertexColors:true,transparent:true,opacity:.85,sizeAttenuation:true}));
-scene.add(stars);
-
-const dust=[];
-for(let i=0;i<5;i++){
- const particle=new THREE.Mesh(new THREE.IcosahedronGeometry(.22+Math.random()*.36,1),new THREE.MeshStandardMaterial({color:i%2?0x6a86b2:0xb4c5d9,roughness:.9,flatShading:true}));
- particle.position.set((Math.random()-.5)*150,(Math.random()-.5)*70,(Math.random()-.5)*100);
- scene.add(particle);dust.push(particle);
-}
-
-function resize(){
- const w=stage.clientWidth,h=stage.clientHeight;
- renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w<700?1.2:1.65));
- renderer.setSize(w,h,false);
- camera.aspect=w/h;
- camera.fov=camera.aspect<.9?Math.min(76,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(43/2))/.62))):43;
- camera.updateProjectionMatrix();
-}
-new ResizeObserver(resize).observe(stage);
-
-function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
-function smoothstep(v){return v*v*(3-2*v)}
-function updateProjectCopy(index){
- if(index===lastActiveIndex)return;
- lastActiveIndex=index;activeIndex=index;
- const d=data[index];
- countEl.textContent=String(index+1).padStart(2,'0')+' / '+String(data.length).padStart(2,'0');
- titleEl.innerHTML='';
- const name=document.createTextNode(d.name+' ');
- titleEl.appendChild(name);
+hero.style.height='calc('+projects.length+' * 100svh + 42px)';
+let activeIndex=-1,scrollFrame=0;
+function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+function setProject(index){
+ const i=clamp(index,0,projects.length-1);
+ if(i===activeIndex)return;
+ activeIndex=i;
+ const p=projects[i],world=worlds[i];
+ countEl.textContent=String(i+1).padStart(2,'0')+' / '+String(projects.length).padStart(2,'0');
+ titleEl.replaceChildren(document.createTextNode(p.name+' '));
  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';titleEl.appendChild(arrow);
- descriptionEl.textContent=d.description;
- if(d.url){linkEl.href=d.url;linkEl.style.display='inline-flex';linkEl.textContent='View project ↗';}
- else{linkEl.removeAttribute('href');linkEl.style.display='none';}
- railButtons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
+ descriptionEl.textContent=p.description;
+ if(p.url){linkEl.href=p.url;linkEl.style.display='inline-flex';linkEl.textContent='View project ↗'}
+ else{linkEl.removeAttribute('href');linkEl.style.display='none'}
+ railButtons.forEach((button,n)=>button.setAttribute('aria-pressed',String(n===i)));
+ // The external viewer supports direct focus links such as /?focus=Saturn.
+ // Reload only when the user enters a new project chapter.
+ const nextUrl='https://www.3dsolarsystem.net/?focus='+encodeURIComponent(world);
+ if(viewer.src!==nextUrl){
+  viewer.classList.remove('loaded');
+  loadNote.style.opacity='1';
+  viewer.src=nextUrl;
+ }
 }
-function refreshTimeline(){
+viewer.addEventListener('load',()=>{
+ viewer.classList.add('loaded');
+ loadNote.style.opacity='0';
+});
+function updateFromScroll(){
+ scrollFrame=0;
  const viewport=Math.max(1,window.innerHeight);
- const maxIndex=data.length-1;
- timelineProgress=clamp((window.scrollY-hero.offsetTop)/viewport,0,maxIndex);
- const lower=Math.min(maxIndex-1,Math.floor(timelineProgress));
- const blend=maxIndex===0?0:smoothstep(timelineProgress-lower);
- const next=Math.min(maxIndex,lower+1);
- const from=planets[lower].pivot.position;
- const to=planets[next].pivot.position;
- const blended=from.clone().lerp(to,blend);
- // Keep the selected planet on the right half, leaving clear space for the project copy.
- cameraRight.set(Math.cos(rotY),0,-Math.sin(rotY)).normalize();
- const framing=window.innerWidth<700?3.8:7.2;
- focusTarget.copy(blended).addScaledVector(cameraRight,-framing);
- // Each project is a close-up. The slight pull-back between steps makes the hand-off legible.
- targetZoom=4.55-Math.sin(blend*Math.PI)*1.25;
- const nextIndex=clamp(Math.round(timelineProgress),0,maxIndex);
- updateProjectCopy(nextIndex);
- document.documentElement.style.setProperty('--scroll-marker',(timelineProgress/maxIndex*95)+'px');
+ const progress=clamp((window.scrollY-hero.offsetTop)/viewport,0,projects.length-1);
+ const current=clamp(Math.floor(progress+.5),0,projects.length-1);
+ setProject(current);
+ const fraction=progress/(projects.length-1);
+ document.documentElement.style.setProperty('--scroll-marker',(fraction*95)+'px');
+}
+function requestUpdate(){
+ if(scrollFrame)return;
+ scrollFrame=requestAnimationFrame(updateFromScroll);
 }
 function goToProject(index){
- const i=clamp(index,0,data.length-1);
+ const i=clamp(index,0,projects.length-1);
  window.scrollTo({top:hero.offsetTop+i*window.innerHeight,behavior:'smooth'});
 }
-railButtons.forEach((button)=>button.addEventListener('click',()=>goToProject(Number(button.dataset.project))));
-window.addEventListener('scroll',()=>{
- if(scrollFrame)return;
- scrollFrame=requestAnimationFrame(()=>{scrollFrame=0;refreshTimeline()});
-},{passive:true});
-window.addEventListener('resize',refreshTimeline);
-refreshTimeline();
-
-function applyCamera(){
- const distance=112/zoom;
- camera.position.set(
-  cameraTarget.x+Math.sin(rotY)*Math.cos(rotX)*distance,
-  cameraTarget.y+Math.sin(rotX)*distance,
-  cameraTarget.z+Math.cos(rotY)*Math.cos(rotX)*distance
- );
- camera.lookAt(cameraTarget);
-}
-let previous=0;
-function animate(now){
- requestAnimationFrame(animate);
- const dt=Math.min((now-previous)/1000,.05);previous=now;
- const follow=1-Math.exp(-dt*3.2);
- cameraTarget.lerp(focusTarget,follow);
- zoom+=(targetZoom-zoom)*follow;
- if(!reducedMotion){
-  planets.forEach((p,i)=>{p.mesh.rotation.y+=dt*(.045+i*.004);p.mesh.rotation.x+=dt*.008});
-  sun.rotation.y+=dt*.035;stars.rotation.y+=dt*.00055;
-  dust.forEach((p,i)=>{p.rotation.x+=dt*.08;p.rotation.y+=dt*.12});
- }
- applyCamera();
- renderer.render(scene,camera);
-}
-requestAnimationFrame(animate);
-
-// Horizontal pointer movement rotates the real 3D camera; vertical touch remains native page scrolling.
-canvas.addEventListener('pointerdown',e=>{
- if(e.pointerType==='mouse')canvas.setPointerCapture(e.pointerId);
- dragState={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,pointerType:e.pointerType};
- dragged=false;
+railButtons.forEach(button=>button.addEventListener('click',()=>goToProject(Number(button.dataset.project))));
+window.addEventListener('scroll',requestUpdate,{passive:true});
+window.addEventListener('resize',requestUpdate);
+window.addEventListener('keydown',event=>{
+ if(event.key==='ArrowDown'&&document.activeElement.tagName!=='INPUT')goToProject(activeIndex+1);
+ if(event.key==='ArrowUp'&&document.activeElement.tagName!=='INPUT')goToProject(activeIndex-1);
 });
-canvas.addEventListener('pointermove',e=>{
- if(!dragState||dragState.id!==e.pointerId)return;
- const dx=e.clientX-dragState.lastX,dy=e.clientY-dragState.lastY;
- if(Math.abs(e.clientX-dragState.x)+Math.abs(e.clientY-dragState.y)>5)dragged=true;
- if(dragState.pointerType==='mouse'||Math.abs(e.clientX-dragState.x)>Math.abs(e.clientY-dragState.y)*1.15){
-  rotY-=dx*.0045;rotX=clamp(rotX+dy*.0035,-.9,.9);
- }
- dragState.lastX=e.clientX;dragState.lastY=e.clientY;
-});
-function endPointer(e){
- if(!dragState||dragState.id!==e.pointerId)return;
- if(!dragged){
-  const rect=canvas.getBoundingClientRect();
-  pointer.x=((e.clientX-rect.left)/rect.width)*2-1;
-  pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(pointer,camera);
-  const hits=raycaster.intersectObjects(planets.map(p=>p.mesh),false);
-  if(hits.length)goToProject(hits[0].object.userData.projectIndex);
- }
- dragState=null;
-}
-canvas.addEventListener('pointerup',endPointer);
-canvas.addEventListener('pointercancel',()=>{dragState=null});
+requestUpdate();
 
-// Theme, page navigation and reveal animations.
 const root=document.documentElement,themeButton=document.querySelector('.theme');
-function setTheme(t){
- root.dataset.theme=t;
- try{localStorage.setItem('portfolio-theme',t)}catch{}
- themeButton.textContent=t==='dark'?'LIGHT MODE':'DARK MODE';
- document.getElementById('theme-color').content=t==='dark'?'#05070d':'#c1c9cf';
+function setTheme(theme){
+ root.dataset.theme=theme;
+ try{localStorage.setItem('portfolio-theme',theme)}catch{}
+ themeButton.textContent=theme==='dark'?'LIGHT MODE':'DARK MODE';
+ document.getElementById('theme-color').content=theme==='dark'?'#05070d':'#c1c9cf';
 }
 let savedTheme='dark';
 try{savedTheme=localStorage.getItem('portfolio-theme')||'dark'}catch{}
@@ -435,13 +305,12 @@ document.getElementById('year').textContent=new Date().getFullYear();
 const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
  if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}
 }),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+document.querySelectorAll('.reveal').forEach(element=>revealObserver.observe(element));
 const navLinks=[...document.querySelectorAll('.nav a')];
-const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const navSections=navLinks.map(anchor=>document.querySelector(anchor.getAttribute('href'))).filter(Boolean);
 const navObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
- if(entry.isIntersecting)navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));
+ if(entry.isIntersecting)navLinks.forEach(anchor=>anchor.classList.toggle('active',anchor.getAttribute('href')==='#'+entry.target.id));
 }),{rootMargin:'-30% 0px -60% 0px'});
-sections.forEach(section=>navObserver.observe(section));
-loadNote.style.display='none';
+navSections.forEach(section=>navObserver.observe(section));
 </script>
 </body></html>
