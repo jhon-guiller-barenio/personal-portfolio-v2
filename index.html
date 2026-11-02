@@ -271,7 +271,13 @@ html[data-theme="light"] .scene-error p{color:#526575}
 </style>
 \n<script type="module">
 try {
-const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js');
+let THREE;
+try {
+ THREE = await import('https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js');
+} catch (cdnError) {
+ console.warn('Primary Three.js CDN failed; trying fallback CDN.', cdnError);
+ THREE = await import('https://unpkg.com/three@0.166.1/build/three.module.js');
+}
 
 const hero=document.getElementById('solar');
 const stage=document.getElementById('solar-stage');
@@ -655,7 +661,7 @@ canvas.addEventListener('pointercancel',()=>{pointerState=null});
    notice=document.createElement('div');
    notice.id='scene-error';
    notice.className='scene-error';
-   notice.innerHTML='<div class="scene-error-mark">3D</div><strong>3D scene could not start</strong><p>Check your graphics acceleration or network access to the Three.js module, then reload this page.</p>';
+   notice.innerHTML='<div class="scene-error-mark">3D</div><strong>Interactive 3D is unavailable</strong><p>The portfolio content and project links still work. This browser or network could not load the 3D engine. Try another network or browser with hardware acceleration enabled.</p>';
    stage.appendChild(notice);
   }
  }
