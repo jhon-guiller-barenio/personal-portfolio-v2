@@ -187,6 +187,30 @@ html[data-theme=light] .solar-fallback{opacity:.8}html[data-theme=light] .fallba
 @media(max-width:600px){.solar-fallback{inset:32% -38% 14% -2%;opacity:.68}.fallback-sun{width:48px}.fallback-caption{font-size:8px;right:35%;bottom:2%}}
 @media(prefers-reduced-motion:reduce){.fallback-orbit{animation:none}}
 
+
+/* Responsive focus treatment: each scroll step brings the selected planet forward. */
+.solar-fallback{transform:translateZ(0);transition:opacity .4s}
+.solar-fallback .fallback-sun{animation:sun-pulse 5s ease-in-out infinite}
+.solar-fallback .fallback-orbit{transition:border-color .5s,filter .5s}
+.solar-fallback .fallback-planet{transition:transform .7s cubic-bezier(.2,.8,.2,1),box-shadow .7s,width .7s}
+.solar-fallback[data-active="0"] .planet-a,
+.solar-fallback[data-active="1"] .planet-b,
+.solar-fallback[data-active="2"] .planet-c,
+.solar-fallback[data-active="3"] .planet-d,
+.solar-fallback[data-active="4"] .planet-e,
+.solar-fallback[data-active="5"] .planet-f{transform:translateX(-50%) rotateX(-62deg) scale(3.4);box-shadow:0 0 12px currentColor,0 0 35px currentColor,0 0 70px currentColor}
+.solar-fallback[data-active="0"] .orbit-a,
+.solar-fallback[data-active="1"] .orbit-b,
+.solar-fallback[data-active="2"] .orbit-c,
+.solar-fallback[data-active="3"] .orbit-d,
+.solar-fallback[data-active="4"] .orbit-e,
+.solar-fallback[data-active="5"] .orbit-f{border-color:#56f2e977;filter:drop-shadow(0 0 5px #56f2e91c)}
+@keyframes sun-pulse{0%,100%{filter:brightness(1);box-shadow:0 0 24px #ffb65caa,0 0 75px #ff8d5266,0 0 145px #f06e4c2b}50%{filter:brightness(1.12);box-shadow:0 0 32px #ffb65ccc,0 0 95px #ff8d5277,0 0 165px #f06e4c3a}}
+html[data-theme=light] .solar-fallback .fallback-sun{filter:saturate(.85)}
+@media(max-width:900px){.solar-fallback{inset:26% -12% 10% 8%}.fallback-caption{font-size:8px}}
+@media(max-width:600px){.solar-fallback{inset:32% -40% 15% -5%}.solar-fallback .fallback-orbit{border-color:#8fa6c53a}.solar-fallback .fallback-planet{width:9px}.solar-fallback[data-active] .fallback-planet{transform:translateX(-50%) rotateX(-62deg) scale(2.7)}.fallback-caption{right:34%;font-size:7px}}
+@media(prefers-reduced-motion:reduce){.solar-fallback,.solar-fallback *{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -259,11 +283,43 @@ html[data-theme=light] .solar-fallback{opacity:.8}html[data-theme=light] .fallba
   const no=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id))}),{rootMargin:'-30% 0px -60% 0px'});
   sections.forEach(section=>no.observe(section));
  }
+ const projectData=[
+  {name:'VERSA Learning',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/'},
+  {name:'Chessroom',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/'},
+  {name:'Café Noir',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/'},
+  {name:'SakuraSound',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/'},
+  {name:'Invoker Lab',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/'},
+  {name:'Arduino Smart Fan',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null}
+ ];
+ const hero=document.getElementById('solar'),title=document.getElementById('project-title'),desc=document.getElementById('project-description'),link=document.getElementById('project-link'),count=document.getElementById('project-count'),fallback=document.querySelector('.solar-fallback');
+ if(hero)hero.style.height=(projectData.length*100)+'svh';
+ let activeProject=-1,scrollQueued=false;
+ function showProject(index){
+  const i=Math.max(0,Math.min(projectData.length-1,index));if(i===activeProject)return;activeProject=i;
+  const p=projectData[i];
+  if(title){title.replaceChildren(document.createTextNode(p.name+' '));const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';title.appendChild(arrow)}
+  if(desc)desc.textContent=p.description;
+  if(count)count.textContent=String(i+1).padStart(2,'0')+' / '+String(projectData.length).padStart(2,'0');
+  if(link){if(p.url){link.href=p.url;link.style.display='inline-flex';link.textContent='View project ↗'}else{link.removeAttribute('href');link.style.display='none'}}
+  document.querySelectorAll('[data-project]').forEach((b,n)=>b.setAttribute('aria-pressed',String(n===i)));
+  if(fallback){fallback.dataset.active=String(i);fallback.style.setProperty('--active-planet',String(i))}
+ }
+ function updateProjectFromScroll(){
+  scrollQueued=false;
+  if(!hero)return;
+  const progress=Math.max(0,Math.min(projectData.length-1,(window.scrollY-hero.offsetTop)/Math.max(1,window.innerHeight)));
+  showProject(Math.round(progress));
+  if(fallback)fallback.style.setProperty('--scroll-progress',String(progress));
+ }
+ function queueProjectUpdate(){if(!scrollQueued){scrollQueued=true;requestAnimationFrame(updateProjectFromScroll)}}
  document.querySelectorAll('[data-project]').forEach(b=>b.addEventListener('click',()=>{
-  const hero=document.getElementById('solar'),i=Number(b.dataset.project);
+  const i=Number(b.dataset.project);
   if(hero)window.scrollTo({top:hero.offsetTop+i*window.innerHeight,behavior:'smooth'});
-  document.querySelectorAll('[data-project]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  showProject(i);
  }));
+ window.addEventListener('scroll',queueProjectUpdate,{passive:true});
+ window.addEventListener('resize',queueProjectUpdate);
+ showProject(0);queueProjectUpdate();
  document.documentElement.classList.add('js-ready');
 })();
 </script>
