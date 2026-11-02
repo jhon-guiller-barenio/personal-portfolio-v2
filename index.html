@@ -423,6 +423,48 @@ function makeGroup(){const g=new THREE.Group();stageRoot.add(g);projectObjects.p
  tube(g,[[3.65,.15,-2.5],[3.65,1.5,-2.5],[3.65,1.95,-2.5]],.055,gold);
 }
 
+// Solar-system backdrop: each project is represented by its own orbiting world.
+const solarSystem=new THREE.Group();
+solarSystem.position.set(5.1,.2,-13.5);
+scene.add(solarSystem);
+const solarSun=new THREE.Mesh(
+ new THREE.SphereGeometry(1.35,48,32),
+ new THREE.MeshBasicMaterial({color:0xffc879})
+);
+solarSystem.add(solarSun);
+const sunGlow=new THREE.Sprite(new THREE.SpriteMaterial({
+ map:(()=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const gr=x.createRadialGradient(64,64,2,64,64,64);gr.addColorStop(0,'#fff4c7');gr.addColorStop(.2,'#ffbf5b99');gr.addColorStop(.58,'#f58b3833');gr.addColorStop(1,'#f58b3800');x.fillStyle=gr;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c)})(),
+ transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+}));
+sunGlow.scale.set(7.5,7.5,1);solarSun.add(sunGlow);
+const solarLight=new THREE.PointLight(0xffb968,95,70,1.7);solarSystem.add(solarLight);
+const solarWorlds=[];
+const worldColors=[0x58c6e9,0xb7c8e8,0xd39b65,0xb78bf4,0xe16d69,0x65d2a1];
+const orbitRadii=[2.5,3.5,4.7,6.0,7.35,8.75];
+function addOrbitRing(radius){
+ const pts=[];for(let i=0;i<=160;i++){const a=i/160*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*radius,Math.sin(a)*radius*.42,0))}
+ const geo=new THREE.BufferGeometry().setFromPoints(pts);
+ const ring=new THREE.LineLoop(geo,new THREE.LineBasicMaterial({color:0x8fa8cb,transparent:true,opacity:.25}));
+ solarSystem.add(ring);
+}
+projects.forEach((p,i)=>{
+ const radius=orbitRadii[i];addOrbitRing(radius);
+ const pivot=new THREE.Group();solarSystem.add(pivot);
+ const world=new THREE.Mesh(new THREE.SphereGeometry([.24,.34,.45,.38,.3,.42][i],40,28),new THREE.MeshStandardMaterial({
+  color:worldColors[i],roughness:.74,metalness:.08,emissive:worldColors[i],emissiveIntensity:.05
+ }));
+ world.position.set(radius,0,0);world.rotation.z=.3+i*.18;pivot.add(world);
+ const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(world.geometry.parameters.radius*1.12,32,20),new THREE.MeshBasicMaterial({color:worldColors[i],transparent:true,opacity:.12,side:THREE.BackSide}));
+ atmosphere.position.copy(world.position);pivot.add(atmosphere);
+ if(i===2){const ring=new THREE.Mesh(new THREE.RingGeometry(.55,.82,64),new THREE.MeshBasicMaterial({color:0xc9b18c,transparent:true,opacity:.55,side:THREE.DoubleSide}));ring.position.copy(world.position);ring.rotation.set(.65,.1,.2);pivot.add(ring)}
+ solarWorlds.push({pivot,world,baseRadius:world.geometry.parameters.radius,color:worldColors[i],angle:i*1.7,speed:.025+i*.004});
+});
+const solarDust=new THREE.Points(
+ (()=>{const g=new THREE.BufferGeometry(),a=[];for(let i=0;i<360;i++){const r=2+Math.random()*10,t=Math.random()*Math.PI*2;a.push(Math.cos(t)*r,Math.sin(t)*r*.42,(Math.random()-.5)*.7)}g.setAttribute('position',new THREE.Float32BufferAttribute(a,3));return g})(),
+ new THREE.PointsMaterial({color:0xaec8e8,size:.035,transparent:true,opacity:.55})
+);
+solarSystem.add(solarDust);
+
 for(let i=0;i<projectObjects.length;i++){
  projectObjects[i].visible=(i===0);
 }
@@ -459,6 +501,7 @@ function setProject(index){
  const i=clamp(index,0,projects.length-1);
  if(i===activeIndex)return;
  activeIndex=i;
+ solarWorlds.forEach((entry,n)=>{entry.world.material.emissiveIntensity=n===i?.5:.045;entry.world.scale.setScalar(n===i?1.32:1);entry.world.material.color.setHex(n===i?0xffffff:entry.color);});
  const p=projects[i];
  countEl.textContent=String(i+1).padStart(2,'0')+' / '+String(projects.length).padStart(2,'0');
  titleEl.replaceChildren(document.createTextNode(p.name+' '));
@@ -497,6 +540,8 @@ function animate(){
  requestAnimationFrame(animate);
  const dt=Math.min(clock.getDelta(),.05);
  const progress=scrollProgress;
+ solarSun.rotation.y+=dt*.09;solarDust.rotation.z+=dt*.006;
+ solarWorlds.forEach((entry,n)=>{entry.angle+=dt*entry.speed;entry.pivot.rotation.z=entry.angle;entry.world.rotation.y+=dt*(.08+n*.015)});
  const from=clamp(Math.floor(progress),0,projects.length-1);
  const to=Math.min(projects.length-1,from+1);
  const blend=ease(progress-from);
