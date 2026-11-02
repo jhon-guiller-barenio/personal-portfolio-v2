@@ -218,7 +218,58 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 <section class="wrap section" id="certificates"><div class="section-head reveal"><div><div class="eyebrow">Continued learning</div><h2>Certificates<span style="color:var(--cyan)">.</span></h2></div><span class="section-number">03 — LEARNING</span></div><div class="certs"><article class="cert reveal"><span>01 / IT</span><h3>IT Support Specialist</h3></article><article class="cert reveal"><span>02 / SECURITY</span><h3>Cybercrime</h3></article><article class="cert reveal"><span>03 / DESIGN</span><h3>Graphic Design</h3></article></div></section>
 <section class="wrap section" id="contact"><div class="contact reveal"><div><div class="eyebrow">Have an idea?</div><h2>Let's make<br>it work.</h2><p>Open to conversations about web development, IT opportunities, and creative projects.</p></div><a class="contact-email" href="mailto:jhonguillerbarenio@gmail.com">jhonguillerbarenio@gmail.com ↗</a></div></section></main>
 <footer class="wrap footer"><span>© <span id="year"></span> Jhon Guiller Barenio</span><div class="footer-links"><a href="https://github.com/jhon-guiller-barenio" target="_blank" rel="noopener">GitHub ↗</a><a href="mailto:jhonguillerbarenio@gmail.com">Email ↗</a><a href="#top">Back to top ↑</a></div></footer>
-<script type="module">
+<script>
+/* Core UI is independent of WebGL/Three.js so the site remains usable on blocked or unsupported browsers. */
+(()=>{
+ const root=document.documentElement,button=document.querySelector('.theme');
+ function setTheme(theme){
+  root.dataset.theme=theme;
+  try{localStorage.setItem('portfolio-theme',theme)}catch(e){}
+  button.textContent=theme==='dark'?'LIGHT MODE':'DARK MODE';
+  const meta=document.getElementById('theme-color');if(meta)meta.content=theme==='dark'?'#05070d':'#e8edf0';
+ }
+ let saved='dark';try{saved=localStorage.getItem('portfolio-theme')||'dark'}catch(e){}
+ setTheme(saved);
+ button.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
+ const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
+ const reveals=[...document.querySelectorAll('.reveal')];
+ if('IntersectionObserver' in window){
+  const ro=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');ro.unobserve(entry.target)}}),{threshold:.08});
+  reveals.forEach(el=>ro.observe(el));
+ }else reveals.forEach(el=>el.classList.add('visible'));
+ const links=[...document.querySelectorAll('.nav a')];
+ if('IntersectionObserver' in window){
+  const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const no=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id))}),{rootMargin:'-30% 0px -60% 0px'});
+  sections.forEach(section=>no.observe(section));
+ }
+ document.querySelectorAll('[data-project]').forEach(b=>b.addEventListener('click',()=>{
+  const hero=document.getElementById('solar'),i=Number(b.dataset.project);
+  if(hero)window.scrollTo({top:hero.offsetTop+i*window.innerHeight,behavior:'smooth'});
+  document.querySelectorAll('[data-project]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+ }));
+ document.documentElement.classList.add('js-ready');
+})();
+</script>
+<style>
+/* Light mode overrides for components that previously had hard-coded dark colors. */
+html[data-theme="light"] .hero,
+html[data-theme="light"] .solar-stage{background:radial-gradient(ellipse at 72% 48%,#e4eaee 0%,#f4f6f7 48%,#e8edf0 100%)}
+html[data-theme="light"] .solar-stage:after{background:linear-gradient(90deg,#eef2f4 0%,#eef2f4ed 20%,#eef2f4a8 42%,transparent 73%),linear-gradient(0deg,#e8edf0b8 0%,transparent 22%)}
+html[data-theme="light"] .hero h1,html[data-theme="light"] .hero h1 span{color:#172532}
+html[data-theme="light"] .hero-copy p,html[data-theme="light"] .hero-note,html[data-theme="light"] .bottom-hint{color:#526575}
+html[data-theme="light"] .project-rail{background:#f3f6f8e8;border-color:#8d9da9}
+html[data-theme="light"] .project-rail button{color:#435563}
+html[data-theme="light"] .project-rail button[aria-pressed=true],html[data-theme="light"] .project-rail button:hover{background:#d9e3e8;color:#172532}
+html[data-theme="light"] .marquee{background:#dce4e9}
+html[data-theme="light"] .project-card{background:linear-gradient(145deg,#f6f8f9,#e7edf0)}
+html[data-theme="light"] .chips span{background:#ffffffa8;color:#435563}
+html[data-theme="light"] .contact{background:radial-gradient(circle at 85% 10%,#8fd9d444,transparent 48%),var(--panel)}
+html[data-theme="light"] .button.ghost{background:#ffffffb8;border-color:#9caab4;color:#172532}
+html[data-theme="light"] .scene-error{background:#f1f4f6ed;color:#172532;border-color:#9caab4}
+html[data-theme="light"] .scene-error p{color:#526575}
+</style>
+\n<script type="module">
 try {
 const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js');
 
@@ -592,29 +643,7 @@ function releasePointer(event){if(pointerState&&pointerState.id===event.pointerI
 canvas.addEventListener('pointerup',releasePointer);
 canvas.addEventListener('pointercancel',()=>{pointerState=null});
 
-// Theme, page navigation and reveal animations.
-const root=document.documentElement,themeButton=document.querySelector('.theme');
-function setTheme(theme){
- root.dataset.theme=theme;
- try{localStorage.setItem('portfolio-theme',theme)}catch{}
- themeButton.textContent=theme==='dark'?'LIGHT MODE':'DARK MODE';
- document.getElementById('theme-color').content=theme==='dark'?'#05070d':'#c1c9cf';
-}
-let savedTheme='dark';try{savedTheme=localStorage.getItem('portfolio-theme')||'dark'}catch{}
-setTheme(savedTheme);
-themeButton.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
-document.getElementById('year').textContent=new Date().getFullYear();
-const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
- if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}
-}),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(element=>revealObserver.observe(element));
-const navLinks=[...document.querySelectorAll('.nav a')];
-const navSections=navLinks.map(anchor=>document.querySelector(anchor.getAttribute('href'))).filter(Boolean);
-const navObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
- if(entry.isIntersecting)navLinks.forEach(anchor=>anchor.classList.toggle('active',anchor.getAttribute('href')==='#'+entry.target.id));
-}),{rootMargin:'-30% 0px -60% 0px'});
-navSections.forEach(section=>navObserver.observe(section));
-document.documentElement.classList.add('js-ready');
+// Theme and navigation are initialized by the standalone script above, even if WebGL fails.
 } catch(error) {
  console.error('Portfolio 3D scene failed to initialize:', error);
  const stage=document.getElementById('solar-stage');
