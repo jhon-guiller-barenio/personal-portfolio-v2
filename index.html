@@ -447,7 +447,7 @@ function setOpacity(group,opacity){
   materials.forEach(m=>{m.opacity=opacity;m.transparent=true;m.depthWrite=false});
  });
 }
-let activeIndex=-1,scrollFrame=0,scrollProgress=0;
+let activeIndex=-1,scrollFrame=0,scrollProgress=0,rotX=0,rotY=0;
 function setProject(index){
  const i=clamp(index,0,projects.length-1);
  if(i===activeIndex)return;
