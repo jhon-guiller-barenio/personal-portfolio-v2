@@ -357,12 +357,23 @@ html[data-theme="light"] .scene-error p{color:#526575}
 \n<script type="module">
 try {
 let THREE;
-try {
- THREE = await import('https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js');
-} catch (cdnError) {
- console.warn('Primary Three.js CDN failed; trying fallback CDN.', cdnError);
- THREE = await import('https://unpkg.com/three@0.166.1/build/three.module.js');
+const threeSources=[
+ 'https://esm.sh/three@0.166.1',
+ 'https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js',
+ 'https://unpkg.com/three@0.166.1/build/three.module.js'
+];
+let threeLoadError;
+for(const source of threeSources){
+ try{
+  THREE=await import(source);
+  if(THREE&&THREE.WebGLRenderer)break;
+  throw new Error('Three.js module loaded without WebGLRenderer');
+ }catch(loadError){
+  threeLoadError=loadError;
+  console.warn('Three.js source failed:',source,loadError);
+ }
 }
+if(!THREE||!THREE.WebGLRenderer)throw threeLoadError||new Error('Unable to load Three.js from available CDNs');
 
 const hero=document.getElementById('solar');
 const stage=document.getElementById('solar-stage');
@@ -579,7 +590,7 @@ const sunGlow=new THREE.Sprite(new THREE.SpriteMaterial({
  transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
 }));
 sunGlow.scale.set(7.5,7.5,1);solarSun.add(sunGlow);
-const solarLight=new THREE.PointLight(0xffb968,95,70,1.7);solarSystem.add(solarLight);
+const solarLight=new THREE.PointLight(0xffb968,180,90,1.45);solarLight.position.set(0,0,0);solarSystem.add(solarLight);
 const solarWorlds=[];
 const worldColors=[0x58c6e9,0xb7c8e8,0xd39b65,0xb78bf4,0xe16d69,0x65d2a1];
 const orbitRadii=[2.5,3.5,4.7,6.0,7.35,8.75];
@@ -717,10 +728,10 @@ function animate(){
   if(opacity>.01)g.scale.setScalar((stage.clientWidth/stage.clientHeight<.9?.78:.98)*focusScale);
  });
  const pullback=1-Math.sin(Math.PI*blend)*.13;
- const cameraBase=stage.clientWidth/stage.clientHeight<.9?28:25;
+ const cameraBase=stage.clientWidth/stage.clientHeight<.9?24:20;
  camera.position.z+=(cameraBase*pullback-camera.position.z)*(1-Math.exp(-dt*4));
  camera.position.x+=(rotY*2.8-camera.position.x)*(1-Math.exp(-dt*3));
- const cameraTilt=stage.clientWidth/stage.clientHeight<.9?10:12;
+ const cameraTilt=stage.clientWidth/stage.clientHeight<.9?8:9;
  camera.position.y+=(cameraTilt+rotX*2.3-camera.position.y)*(1-Math.exp(-dt*3));
  camera.lookAt(stage.clientWidth/stage.clientHeight<.9?0:0,0,0);
  stars.rotation.y+=reducedMotion?0:dt*.0008;
@@ -751,7 +762,7 @@ canvas.addEventListener('pointercancel',()=>{pointerState=null});
 
 // Theme and navigation are initialized by the standalone script above, even if WebGL fails.
 } catch(error) {
- console.error('Portfolio 3D scene failed to initialize:', error);
+ console.error('Portfolio 3D scene failed to initialize:', error);\n document.documentElement.dataset.sceneError=String(error&&error.message||error);
  const stage=document.getElementById('solar-stage');
  const canvas=document.getElementById('project-canvas');
  if(canvas)canvas.style.display='none';
