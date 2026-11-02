@@ -171,6 +171,22 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 .scene-error strong{font-size:1.1rem}
 .scene-error p{color:#aab5c6;font-size:.84rem;line-height:1.7;margin-bottom:0}
 @media(max-width:900px){.scene-error{left:50%;top:68%}}
+
+/* WebGL-independent orbital fallback */
+.solar-fallback{position:absolute;z-index:2;inset:0 0 0 42%;overflow:hidden;pointer-events:none;perspective:900px}
+.fallback-nebula{position:absolute;inset:0;background:radial-gradient(ellipse at 52% 48%,#163b5445,transparent 52%),radial-gradient(ellipse at 75% 30%,#44316b2b,transparent 45%)}
+.fallback-sun{position:absolute;left:53%;top:49%;width:clamp(48px,7vw,94px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff8d5 0%,#ffc96d 20%,#f17b47 54%,#873d7a 78%,#392b66 100%);box-shadow:0 0 24px #ffb65caa,0 0 75px #ff8d5266,0 0 145px #f06e4c2b}
+.fallback-orbit{position:absolute;left:53%;top:49%;border:1px solid #8fa6c52c;border-radius:50%;transform:translate(-50%,-50%) rotateX(62deg);animation:fallback-orbit-spin 22s linear infinite}
+.orbit-a{width:clamp(130px,17vw,210px);aspect-ratio:1;animation-duration:12s}.orbit-b{width:clamp(205px,26vw,320px);aspect-ratio:1;animation-duration:20s}.orbit-c{width:clamp(285px,36vw,440px);aspect-ratio:1;animation-duration:29s}.orbit-d{width:clamp(365px,46vw,560px);aspect-ratio:1;animation-duration:39s}.orbit-e{width:clamp(445px,56vw,680px);aspect-ratio:1;animation-duration:52s}.orbit-f{width:clamp(525px,66vw,800px);aspect-ratio:1;animation-duration:65s}
+.fallback-planet{position:absolute;left:50%;top:-5px;display:block;width:12px;aspect-ratio:1;border-radius:50%;transform:translateX(-50%) rotateX(-62deg);box-shadow:0 0 18px currentColor}
+.planet-a{width:8px;background:#74c9d8;color:#74c9d8}.planet-b{width:14px;background:#df9e70;color:#df9e70}.planet-c{width:17px;background:#57c7c1;color:#57c7c1}.planet-d{width:11px;background:#a88be7;color:#a88be7}.planet-e{width:23px;background:#d8b16d;color:#d8b16d}.planet-f{width:8px;background:#9bb7e8;color:#9bb7e8}
+.fallback-caption{position:absolute;right:7%;bottom:7%;font:10px var(--mono);letter-spacing:.16em;color:#9eafc2}.fallback-caption span{color:var(--cyan)}
+html[data-theme=light] .solar-fallback{opacity:.8}html[data-theme=light] .fallback-orbit{border-color:#435a682b}html[data-theme=light] .fallback-caption{color:#526575}
+@keyframes fallback-orbit-spin{from{transform:translate(-50%,-50%) rotateX(62deg) rotateZ(0)}to{transform:translate(-50%,-50%) rotateX(62deg) rotateZ(360deg)}}
+@media(max-width:900px){.solar-fallback{inset:27% -12% 10% 8%;opacity:.72}.fallback-caption{bottom:2%;right:16%}}
+@media(max-width:600px){.solar-fallback{inset:32% -38% 14% -2%;opacity:.68}.fallback-sun{width:48px}.fallback-caption{font-size:8px;right:35%;bottom:2%}}
+@media(prefers-reduced-motion:reduce){.fallback-orbit{animation:none}}
+
 </style>
 </head>
 <body>
@@ -656,14 +672,12 @@ canvas.addEventListener('pointercancel',()=>{pointerState=null});
  const canvas=document.getElementById('project-canvas');
  if(canvas)canvas.style.display='none';
  if(stage){
-  let notice=document.getElementById('scene-error');
-  if(!notice){
-   notice=document.createElement('div');
-   notice.id='scene-error';
-   notice.className='scene-error';
-   notice.innerHTML='<div class="scene-error-mark">3D</div><strong>Interactive 3D is unavailable</strong><p>The portfolio content and project links still work. This browser or network could not load the 3D engine. Try another network or browser with hardware acceleration enabled.</p>';
-   stage.appendChild(notice);
-  }
+  // CSS-only orbital scene keeps the hero visual when WebGL or Three.js is unavailable.
+  const fallback=document.createElement('div');
+  fallback.className='solar-fallback';
+  fallback.setAttribute('aria-label','Animated solar system fallback');
+  fallback.innerHTML='<div class="fallback-nebula"></div><div class="fallback-sun"></div><div class="fallback-orbit orbit-a"><i class="fallback-planet planet-a"></i></div><div class="fallback-orbit orbit-b"><i class="fallback-planet planet-b"></i></div><div class="fallback-orbit orbit-c"><i class="fallback-planet planet-c"></i></div><div class="fallback-orbit orbit-d"><i class="fallback-planet planet-d"></i></div><div class="fallback-orbit orbit-e"><i class="fallback-planet planet-e"></i></div><div class="fallback-orbit orbit-f"><i class="fallback-planet planet-f"></i></div><div class="fallback-caption">PROJECT WORLDS <span>·</span> ORBITAL VIEW</div>';
+  stage.appendChild(fallback);
  }
 }
 </script>
