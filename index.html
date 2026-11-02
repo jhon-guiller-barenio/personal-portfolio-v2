@@ -292,7 +292,7 @@ function makeGroup(){const g=new THREE.Group();stageRoot.add(g);projectObjects.p
  box(g,8.8,.38,5.6,cover,0,0,0);
  box(g,8.35,.18,5.2,pageShade,0,.28,0);
  // two lifted page blocks
- box(g,4.05,.18,5.02,-page===null?null:page,-2.05,.43,0);
+ box(g,4.05,.18,5.02,page,-2.05,.43,0);
  box(g,4.05,.18,5.02,page,2.05,.43,0);
  // curved page silhouette at the center fold
  tube(g,[[-.18,.57,-2.45],[-.12,.78,-1.3],[0,.86,0],[.12,.78,1.3],[.18,.57,2.45]],.075,gold);
@@ -319,7 +319,7 @@ function makeGroup(){const g=new THREE.Group();stageRoot.add(g);projectObjects.p
  const profile=[[0,0],[1.45,0],[1.55,.2],[1.32,.38],[.83,.48],[.76,.85],[1.05,1.25],[1.12,1.7],[.8,2.35],[1.05,2.95],[.76,3.6],[.2,3.85],[.35,3.3],[-.25,3.35],[-.52,3.8],[-.95,3.55],[-1.15,2.85],[-.9,2.15],[-1.25,1.6],[-.95,.8],[-1.4,.38],[-1.5,.2],[-1.4,0]];
  const horse=new THREE.Shape();horse.moveTo(profile[0][0],profile[0][1]);for(let i=1;i<profile.length;i++)horse.lineTo(profile[i][0],profile[i][1]);horse.closePath();
  extrudedShape(g,horse,1.05,blue,-.25,-.1,.05,.11);
- addMesh(g,new THREE.SphereGeometry(.12,16,12),gold=material(0xf2c36b,.65,.25),.2,2.75,1.18);
+ const eyeGold=material(0xf2c36b,.65,.25);addMesh(g,new THREE.SphereGeometry(.12,16,12),eyeGold,.2,2.75,1.18);
  const pawnPts=[[0,0],[.65,.0],[.8,.16],[.52,.34],[.38,.64],[.22,.96],[.4,1.28],[.52,1.48],[.46,1.73],[.24,1.92],[0,2.0]];
  lathe(g,pawnPts,silver,2.65,-.2,-1.9);
  lathe(g,[[0,0],[.7,0],[.8,.15],[.5,.3],[.23,.65],[.32,.85],[.25,1.3],[0,1.48]],black,-2.6,-.2,1.9);
