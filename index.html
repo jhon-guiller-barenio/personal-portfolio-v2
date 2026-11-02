@@ -233,7 +233,7 @@ const projects=[
  {name:'Invoker Lab',kind:'BROWSER GAME',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/'},
  {name:'Arduino Smart Fan',kind:'HARDWARE + SOFTWARE',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null}
 ];
-hero.style.height='calc('+projects.length+' * 100svh)';
+hero.style.height=(projects.length*100)+'svh';
 
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.2:1.6));
