@@ -104,14 +104,14 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 }
 
  
-/* Third-party 3D planet viewer with scroll-driven project chapters */
-.hero{height:calc(600svh + 42px);min-height:0;max-height:none;position:relative;overflow:visible;background:#030509;isolation:isolate}
+/* Local project-specific 3D objects; one renderer stays alive for the entire scroll journey */
+.hero{height:600svh;min-height:0;max-height:none;position:relative;overflow:visible;background:#030509;isolation:isolate}
 .hero:after{display:none}
-.solar-stage{position:sticky;top:0;width:100%;height:100svh;min-height:560px;overflow:hidden;isolation:isolate;background:#030509}
-.planet-viewer{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:0;background:#030509;opacity:0;transition:opacity .55s ease}
-.planet-viewer.loaded{opacity:1}
-.solar-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#020306f5 0%,#020306e8 23%,#020306a8 43%,transparent 73%),linear-gradient(0deg,#020306bd 0%,transparent 22%); }
-.scroll-capture{position:absolute;left:0;top:0;bottom:0;width:46%;z-index:2;pointer-events:auto;background:transparent}
+.solar-stage{position:sticky;top:0;width:100%;height:100svh;min-height:560px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 72% 48%,#111a2c 0%,#070a12 43%,#020306 100%)}
+#project-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;touch-action:pan-y;cursor:grab;outline:none}
+#project-canvas:active{cursor:grabbing}
+.solar-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#020306f5 0%,#020306e8 23%,#020306a8 43%,transparent 73%),linear-gradient(0deg,#020306bd 0%,transparent 22%)}
+.scroll-capture{display:none}
 .hero .hero-copy{position:absolute;z-index:3;top:50%;left:clamp(26px,7vw,120px);transform:translateY(-50%);width:min(520px,40vw);max-width:520px;pointer-events:auto}
 .hero-copy .eyebrow{font-size:.68rem;letter-spacing:.18em;color:#a9b4c7;margin-bottom:26px}
 .hero-copy .eyebrow span{color:var(--cyan)}
@@ -133,13 +133,10 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 .bottom-hint span{color:var(--cyan);font-size:.9rem;margin-right:8px}
 .scroll-marker{position:absolute;z-index:4;right:clamp(18px,4vw,58px);top:50%;height:120px;width:1px;background:#ffffff25;transform:translateY(-50%);pointer-events:none}
 .scroll-marker span{position:absolute;top:0;left:-1px;width:3px;height:25px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);transform:translateY(var(--scroll-marker,0))}
-.load-note{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);font:.67rem var(--mono);color:#9aa9be;pointer-events:none;transition:opacity .3s}
-.solar-credit{height:42px;display:flex;align-items:center;justify-content:center;background:#030509;color:#7c8799;font:.62rem var(--mono);letter-spacing:.04em}
-.solar-credit a{color:var(--cyan);margin-left:5px;text-decoration:underline;text-underline-offset:3px}
 .project-label,.hud,.controls,.planet-info{display:none!important}
 @media(max-width:900px){
+ .solar-stage{background:radial-gradient(ellipse at 70% 62%,#111a2c 0%,#070a12 46%,#020306 100%)}
  .solar-shade{background:linear-gradient(180deg,#020306ed 0%,#020306bf 34%,transparent 75%),linear-gradient(0deg,#020306df 0%,transparent 38%)}
- .scroll-capture{width:100%;height:47%;bottom:auto}
  .hero .hero-copy{top:11%;left:24px;transform:none;width:min(80%,560px)}
  .hero-copy .eyebrow{margin-bottom:18px}
  .hero h1{font-size:clamp(3.1rem,9vw,5.3rem);margin-bottom:14px}
@@ -150,10 +147,9 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
  .project-rail button{padding:9px 10px;font-size:.61rem}
  .bottom-hint{bottom:84px;left:18px;font-size:.54rem}
  .scroll-marker{right:12px;height:82px;top:56%}
- .planet-viewer{pointer-events:none}
 }
 @media(max-width:600px){
- .hero{height:calc(600svh + 42px)}
+ .hero{height:600svh}
  .solar-stage{min-height:620px}
  .hero .hero-copy{top:12%;left:19px;width:calc(100% - 48px)}
  .hero-copy .eyebrow{font-size:.59rem;letter-spacing:.13em;margin-bottom:16px}
@@ -168,7 +164,7 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
  .bottom-hint{display:none}
  .scroll-marker{display:none}
 }
-@media(prefers-reduced-motion:reduce){.project-rail button,.planet-viewer{transition:none}}
+@media(prefers-reduced-motion:reduce){.project-rail button{transition:none}}
 </style>
 </head>
 <body>
@@ -176,10 +172,10 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 <main id="top">
 <section class="hero" id="solar" aria-label="Selected projects, scroll to travel between planets">
  <div class="solar-stage" id="solar-stage">
-  <iframe id="planet-viewer" class="planet-viewer" title="Interactive 3D Solar System by Mzu 3D Solar System" src="https://www.3dsolarsystem.net/?focus=Mercury" loading="eager" allow="fullscreen; accelerometer; gyroscope" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <canvas id="project-canvas" aria-label="Interactive 3D project models. Scroll to transition between objects; drag horizontally to rotate."></canvas>
   <div class="solar-shade" aria-hidden="true"></div>
   <div class="scroll-capture" aria-hidden="true"></div>
-  <div class="load-note" id="load-note">Loading the 3D solar system…</div>
+  
   <div class="hero-copy">
    <div class="eyebrow">SELECTED WORK / <span id="project-count">01 / 06</span></div>
    <h1 id="project-title">VERSA Learning <span aria-hidden="true">↗</span></h1>
@@ -201,7 +197,6 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
   <div class="bottom-hint"><span>↓</span> SCROLL TO EXPLORE · EACH WORLD HAS ITS OWN STORY</div>
   <div class="scroll-marker" aria-hidden="true"><span></span></div>
  </div>
- <div class="solar-credit">Interactive solar system by <a href="https://www.3dsolarsystem.net/" target="_blank" rel="noopener">Mzu 3D Solar System ↗</a></div>
 </section>
 <div class="marquee"><div class="marquee-track"><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span></div></div>
 <section class="wrap section" id="work"><div class="section-head reveal"><div><div class="eyebrow">A closer look</div><h2>Selected projects<span style="color:var(--cyan)">.</span></h2></div><span class="section-number">01 — 06</span></div><div class="project-grid">
@@ -218,32 +213,246 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 <section class="wrap section" id="contact"><div class="contact reveal"><div><div class="eyebrow">Have an idea?</div><h2>Let's make<br>it work.</h2><p>Open to conversations about web development, IT opportunities, and creative projects.</p></div><a class="contact-email" href="mailto:jhonguillerbarenio@gmail.com">jhonguillerbarenio@gmail.com ↗</a></div></section></main>
 <footer class="wrap footer"><span>© <span id="year"></span> Jhon Guiller Barenio</span><div class="footer-links"><a href="https://github.com/jhon-guiller-barenio" target="_blank" rel="noopener">GitHub ↗</a><a href="mailto:jhonguillerbarenio@gmail.com">Email ↗</a><a href="#top">Back to top ↑</a></div></footer>
 <script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js';
+
 const hero=document.getElementById('solar');
 const stage=document.getElementById('solar-stage');
-const viewer=document.getElementById('planet-viewer');
-const loadNote=document.getElementById('load-note');
+const canvas=document.getElementById('project-canvas');
 const titleEl=document.getElementById('project-title');
 const countEl=document.getElementById('project-count');
 const descriptionEl=document.getElementById('project-description');
 const linkEl=document.getElementById('project-link');
 const railButtons=[...document.querySelectorAll('[data-project]')];
-const worlds=['Mercury','Venus','Earth','Mars','Jupiter','Saturn'];
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const projects=[
- {name:'VERSA Learning',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/'},
- {name:'Chessroom',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/'},
- {name:'Café Noir',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/'},
- {name:'SakuraSound',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/'},
- {name:'Invoker Lab',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/'},
- {name:'Arduino Smart Fan',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null}
+ {name:'VERSA Learning',kind:'LEARNING PLATFORM',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/'},
+ {name:'Chessroom',kind:'MULTIPLAYER GAME',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/'},
+ {name:'Café Noir',kind:'CAFE WEBSITE',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/'},
+ {name:'SakuraSound',kind:'MUSIC DISCOVERY',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/'},
+ {name:'Invoker Lab',kind:'BROWSER GAME',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/'},
+ {name:'Arduino Smart Fan',kind:'HARDWARE + SOFTWARE',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null}
 ];
-hero.style.height='calc('+projects.length+' * 100svh + 42px)';
-let activeIndex=-1,scrollFrame=0;
-function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+hero.style.height='calc('+projects.length+' * 100svh)';
+
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.2:1.6));
+renderer.setSize(stage.clientWidth,stage.clientHeight,false);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.18;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x03060c,.0012);
+const camera=new THREE.PerspectiveCamera(42,stage.clientWidth/stage.clientHeight,.1,1000);
+scene.add(new THREE.AmbientLight(0x9aabc8,.9));
+const keyLight=new THREE.DirectionalLight(0xffe3bd,3.2);keyLight.position.set(-8,12,18);scene.add(keyLight);
+const rimLight=new THREE.PointLight(0x687dff,105,80,2);rimLight.position.set(5,5,-12);scene.add(rimLight);
+const cyanLight=new THREE.PointLight(0x56e8ee,70,50,2);cyanLight.position.set(-8,-5,8);scene.add(cyanLight);
+
+const stageRoot=new THREE.Group();scene.add(stageRoot);
+const projectObjects=[];
+const starsGeometry=new THREE.BufferGeometry(),starPositions=[],starColors=[];
+for(let i=0;i<1900;i++){
+ const r=55+Math.random()*260,theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1);
+ starPositions.push(r*Math.sin(phi)*Math.cos(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(theta));
+ const v=.35+Math.random()*.6;starColors.push(v*.8,v*.9,v);
+}
+starsGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));
+starsGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
+const stars=new THREE.Points(starsGeometry,new THREE.PointsMaterial({size:.5,vertexColors:true,transparent:true,opacity:.8,sizeAttenuation:true}));
+scene.add(stars);
+
+function material(color,metalness,roughness,emissive){
+ return new THREE.MeshStandardMaterial({color:color,metalness:metalness??.18,roughness:roughness??.45,emissive:emissive||0x000000,emissiveIntensity:emissive?0.35:0,transparent:true,opacity:1,depthWrite:false});
+}
+function addMesh(group,geometry,mat,x=0,y=0,z=0,rx=0,ry=0,rz=0){
+ const mesh=new THREE.Mesh(geometry,mat);mesh.position.set(x,y,z);mesh.rotation.set(rx,ry,rz);mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);return mesh;
+}
+function box(group,w,h,d,mat,x=0,y=0,z=0,rx=0,ry=0,rz=0){
+ return addMesh(group,new THREE.BoxGeometry(w,h,d),mat,x,y,z,rx,ry,rz);
+}
+function tube(group,points,radius,mat,segments=72){
+ const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(p[0],p[1],p[2])));
+ return addMesh(group,new THREE.TubeGeometry(curve,segments,radius,8,false),mat);
+}
+function extrudedShape(group,shape,depth,mat,x=0,y=0,z=0,bevel=.05){
+ const geometry=new THREE.ExtrudeGeometry(shape,{depth:depth,bevelEnabled:bevel>0,bevelSegments:2,steps:1,bevelSize:bevel,bevelThickness:bevel});
+ geometry.computeVertexNormals();return addMesh(group,geometry,mat,x,y,z);
+}
+function lathe(group,coords,mat,x=0,y=0,z=0){
+ return addMesh(group,new THREE.LatheGeometry(coords.map(p=>new THREE.Vector2(p[0],p[1])),64),mat,x,y,z);
+}
+function makeGroup(){const g=new THREE.Group();stageRoot.add(g);projectObjects.push(g);return g;}
+
+// 01 — VERSA: an open learning book, layered paper, chapter lines and a bright bookmark.
+{
+ const g=makeGroup();
+ const cover=material(0x173d56,.58,.3),page=material(0xe7e2d3,.04,.82),pageShade=material(0xb9c6cc,.12,.65),ink=material(0x277d8a,.32,.35,0x0b4248),gold=material(0xd8ad69,.7,.28);
+ box(g,8.8,.38,5.6,cover,0,0,0);
+ box(g,8.35,.18,5.2,pageShade,0,.28,0);
+ // two lifted page blocks
+ box(g,4.05,.18,5.02,-page===null?null:page,-2.05,.43,0);
+ box(g,4.05,.18,5.02,page,2.05,.43,0);
+ // curved page silhouette at the center fold
+ tube(g,[[-.18,.57,-2.45],[-.12,.78,-1.3],[0,.86,0],[.12,.78,1.3],[.18,.57,2.45]],.075,gold);
+ for(let side=-1;side<=1;side+=2){
+  for(let row=0;row<6;row++){
+   const length=row===0?2.5:2.9;
+   box(g,length,.025,.035,ink,side*2.45,.545,-1.8+row*.62);
+  }
+  box(g,.13,.05,4.8,gold,side*4.2,.23,0);
+ }
+ // upright bookmark tab
+ const bookmark=new THREE.Shape();bookmark.moveTo(-.22,0);bookmark.lineTo(.22,0);bookmark.lineTo(.22,1.55);bookmark.lineTo(0,1.22);bookmark.lineTo(-.22,1.55);bookmark.closePath();
+ extrudedShape(g,bookmark,.12,gold,3.15,.55,1.9,.025);
+ // floating study tiles
+ for(let i=0;i<3;i++)box(g,.8,.18,.8,ink,-4.5+i*1.0,2.2+i*.28,-.9+i*.5,0,.35*i,.25*i);
+}
+
+// 02 — Chessroom: a checkered board with a sculpted chess knight and supporting pieces.
+{
+ const g=makeGroup();
+ const board=material(0x151d2e,.52,.35),lightSquare=material(0xe0d8c6,.12,.7),darkSquare=material(0x31455f,.45,.38),silver=material(0xc3d3e2,.78,.24),blue=material(0x526b94,.72,.24),black=material(0x18253a,.7,.25);
+ box(g,9.1,.48,9.1,board,0,-.55,0);
+ for(let x=0;x<8;x++)for(let z=0;z<8;z++)box(g,1.02,.09,1.02,(x+z)%2?lightSquare:darkSquare,-3.55+x*1.015,-.26,-3.55+z*1.015);
+ const profile=[[0,0],[1.45,0],[1.55,.2],[1.32,.38],[.83,.48],[.76,.85],[1.05,1.25],[1.12,1.7],[.8,2.35],[1.05,2.95],[.76,3.6],[.2,3.85],[.35,3.3],[-.25,3.35],[-.52,3.8],[-.95,3.55],[-1.15,2.85],[-.9,2.15],[-1.25,1.6],[-.95,.8],[-1.4,.38],[-1.5,.2],[-1.4,0]];
+ const horse=new THREE.Shape();horse.moveTo(profile[0][0],profile[0][1]);for(let i=1;i<profile.length;i++)horse.lineTo(profile[i][0],profile[i][1]);horse.closePath();
+ extrudedShape(g,horse,1.05,blue,-.25,-.1,.05,.11);
+ addMesh(g,new THREE.SphereGeometry(.12,16,12),gold=material(0xf2c36b,.65,.25),.2,2.75,1.18);
+ const pawnPts=[[0,0],[.65,.0],[.8,.16],[.52,.34],[.38,.64],[.22,.96],[.4,1.28],[.52,1.48],[.46,1.73],[.24,1.92],[0,2.0]];
+ lathe(g,pawnPts,silver,2.65,-.2,-1.9);
+ lathe(g,[[0,0],[.7,0],[.8,.15],[.5,.3],[.23,.65],[.32,.85],[.25,1.3],[0,1.48]],black,-2.6,-.2,1.9);
+}
+
+// 03 — Café Noir: ceramic takeaway cup, crema surface, sleeve, saucer and steam ribbons.
+{
+ const g=makeGroup();
+ const porcelain=material(0xe8e0d0,.12,.26),coffee=material(0x352016,.1,.22),crema=material(0xb77a42,.25,.28),sleeve=material(0x25211f,.45,.42),gold=material(0xc7a16b,.68,.28);
+ lathe(g,[[0,0],[1.9,0],[2.0,.18],[1.9,.35],[1.55,3.35],[1.38,3.5],[0,3.5]],porcelain,0,-1.05,0);
+ lathe(g,[[0,0],[2.08,0],[2.22,.13],[2.0,.25],[0,.25]],porcelain,0,-1.18,0);
+ addMesh(g,new THREE.CylinderGeometry(1.48,1.48,.09,72),coffee,0,2.36,0);
+ addMesh(g,new THREE.CylinderGeometry(1.35,1.35,.055,72),crema,0,2.42,0);
+ // Dark paper sleeve wraps the lower middle of the cup.
+ addMesh(g,new THREE.CylinderGeometry(1.76,1.9,1.15,72,1,true),sleeve,0,.15,0);
+ addMesh(g,new THREE.TorusGeometry(1.84,.15,16,72,Math.PI*1.55),porcelain,1.58,.55,0,Math.PI/2,0,Math.PI/2);
+ // saucer
+ lathe(g,[[0,0],[2.35,0],[2.8,.08],[3.0,.2],[2.75,.3],[0,.3]],gold,0,-1.5,0);
+ for(let i=0;i<3;i++){
+  const x=-.7+i*.7;
+  tube(g,[[x,2.7,0],[x-.35,3.45,.05],[x+.3,4.15,.1],[x-.08,4.85,.05]],.055,material(0xc5b7a4,.05,.85));
+ }
+}
+
+// 04 — SakuraSound: a vinyl record, album label, concentric grooves and over-ear headphones.
+{
+ const g=makeGroup();
+ const vinyl=material(0x171b2b,.72,.25),groove=material(0x65718a,.62,.3),pink=material(0xd77cbb,.4,.3,0x4e1738),silver=material(0xbec8d8,.78,.25),cushion=material(0x33263e,.12,.48);
+ addMesh(g,new THREE.CylinderGeometry(4.0,4.0,.32,96),vinyl,0,0,0,Math.PI/2,0,0);
+ for(let r=1.35;r<=3.75;r+=.23)addMesh(g,new THREE.TorusGeometry(r,.018,5,100),groove,0,0,.2);
+ addMesh(g,new THREE.CylinderGeometry(1.12,1.12,.08,64),pink,0,0,.23,Math.PI/2,0,0);
+ addMesh(g,new THREE.CylinderGeometry(.16,.16,.1,32),silver,0,0,.31,Math.PI/2,0,0);
+ // Headband arch and ear cups sit behind the disc.
+ const arc=[];for(let i=0;i<=32;i++){const a=Math.PI*(.08+i/32*.84);arc.push([Math.cos(a)*3.0,Math.sin(a)*3.0+2.0,-.55]);}
+ tube(g,arc,.24,silver,80);
+ for(const x of [-2.75,2.75]){
+  addMesh(g,new THREE.TorusGeometry(.72,.22,16,48),cushion,x,-.3,-.45,Math.PI/2,0,0);
+  box(g,.22,1.2,.34,silver,x,-.3,-.5,0,0,x<0?-.08:.08);
+ }
+ // A floating note symbol is built from simple extruded geometry.
+ const note=new THREE.Shape();note.moveTo(0,0);note.lineTo(.28,0);note.lineTo(.28,1.55);note.lineTo(1.15,1.8);note.lineTo(1.15,2.08);note.lineTo(0,1.8);note.closePath();
+ extrudedShape(g,note,.22,pink,-4.8,1.65,.6,.03);
+ addMesh(g,new THREE.SphereGeometry(.42,24,16),pink,-4.35,1.7,.75);
+}
+
+// 05 — Invoker Lab: a magical keyboard console with keycaps, rune crystals and orbiting arcane rings.
+{
+ const g=makeGroup();
+ const base=material(0x1a1b36,.65,.3),key=material(0x30375c,.52,.28),keyEdge=material(0x7284b4,.7,.26),violet=material(0x9177ed,.46,.22,0x38205e),cyan=material(0x64dce2,.52,.23,0x17484d),crystal=material(0xb8a5ff,.7,.18,0x4c278a);
+ box(g,8.8,.55,5.4,base,0,-1.45,0,.08,0,0);
+ for(let row=0;row<3;row++)for(let col=0;col<5;col++){
+  box(g,1.28,.42,1.15,key,-3.1+col*1.55,-1.05,-1.55+row*1.55,0,.04*(col%2),0);
+  box(g,1.05,.12,.92,keyEdge,-3.1+col*1.55,-.78,-1.55+row*1.55);
+ }
+ addMesh(g,new THREE.OctahedronGeometry(1.7,1),crystal,0,1.1,.3,.15,.3,.1);
+ addMesh(g,new THREE.TorusGeometry(2.65,.055,10,100),violet,0,1.0,0,Math.PI/2.4,.15,0);
+ addMesh(g,new THREE.TorusGeometry(3.25,.035,8,100),cyan,0,1.0,0,Math.PI/2.1,-.25,.4);
+ for(let i=0;i<4;i++){
+  const rune=new THREE.OctahedronGeometry(.43,.1);
+  addMesh(g,rune,i%2?crystal:cyan,Math.cos(i*Math.PI/2)*3.9,1.35+Math.sin(i*2)*.35,Math.sin(i*Math.PI/2)*2.2,0,i*.4,.2);
+ }
+}
+
+// 06 — Arduino Smart Fan: a PCB, fan cage, rotating blades and electronic components.
+{
+ const g=makeGroup();
+ const pcb=material(0x174b40,.48,.42),trace=material(0x55c69b,.48,.32,0x103b2b),gold=material(0xd6ad60,.8,.25),chip=material(0x1b2533,.64,.26),fanMetal=material(0x95b3bf,.82,.22),blade=material(0x68a7b2,.7,.25);
+ box(g,9.4,.48,7.1,pcb,0,-.6,0);
+ // board traces and mounting holes
+ for(let i=0;i<5;i++){
+  box(g,.08,.04,2.7,trace,-3.55+i*1.65,-.33,-1.25);
+  box(g,1.1,.04,.08,trace,-2.95+i*1.65,-.33,1.45);
+ }
+ for(const x of [-4.2,4.2])for(const z of [-2.95,2.95])addMesh(g,new THREE.CylinderGeometry(.22,.22,.08,20),gold,x,-.32,z,Math.PI/2,0,0);
+ // fan housing faces the viewer, mounted on the right side of the PCB
+ const fan=new THREE.Group();fan.position.set(1.15,.15,1.8);g.add(fan);
+ addMesh(fan,new THREE.TorusGeometry(2.65,.24,18,72),fanMetal,0,0,0);
+ addMesh(fan,new THREE.TorusGeometry(2.28,.075,10,72),gold,0,0,.05);
+ const blades=[];
+ for(let i=0;i<5;i++){
+  const bladeShape=new THREE.Shape();bladeShape.moveTo(.35,.16);bladeShape.bezierCurveTo(1.0,.45,2.05,.2,2.12,-.45);bladeShape.bezierCurveTo(1.75,-.72,.95,-.6,.35,-.16);bladeShape.closePath();
+  const b=extrudedShape(fan,bladeShape,.22,blade,.0,0,.08,.04);b.rotation.z=i*Math.PI*2/5;blades.push(b);
+ }
+ addMesh(fan,new THREE.CylinderGeometry(.68,.68,.42,48),chip,0,0,.28,Math.PI/2,0,0);
+ addMesh(fan,new THREE.CylinderGeometry(.44,.44,.48,48),gold,0,0,.54,Math.PI/2,0,0);
+ // visible electronics / controller and temperature sensor
+ box(g,1.65,.85,1.5,chip,-3.0,.05,-1.6);
+ box(g,1.0,.22,.9,material(0x6b8191,.7,.3),-3.0,.6,-1.6);
+ box(g,1.35,.72,1.1,chip,-3.0,.02,1.5);
+ for(let i=0;i<8;i++)box(g,.11,.2,.18,gold,-3.65+i*.19,-.23,2.12);
+ for(let i=0;i<3;i++)box(g,.14,.25,.14,gold,3.2+i*.35,-.1,-2.0);
+ // HC-05 style wireless module and sensor post
+ box(g,1.8,.42,.85,trace,3.2,-.05,-2.55);
+ tube(g,[[3.65,.15,-2.5],[3.65,1.5,-2.5],[3.65,1.95,-2.5]],.055,gold);
+}
+
+for(let i=0;i<projectObjects.length;i++){
+ projectObjects[i].visible=(i===0);
+}
+
+// Device-specific composition: keep the model on the right on desktop and below the copy on mobile.
+function layoutScene(){
+ const w=stage.clientWidth,h=stage.clientHeight,aspect=w/h;
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w<700?1.15:1.6));
+ renderer.setSize(w,h,false);
+ camera.aspect=aspect;
+ camera.fov=aspect<.78?54:(aspect<1?48:42);
+ camera.position.set(0,0,aspect<.78?28:25);
+ camera.lookAt(0,0,0);
+ const mobile=aspect<.9;
+ for(const g of projectObjects){
+  g.position.set(mobile?0:5.0,mobile?-4.0:-.35,0);
+  g.scale.setScalar(mobile?.62:.92);
+ }
+}
+new ResizeObserver(layoutScene).observe(stage);layoutScene();
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function ease(v){return v*v*(3-2*v)}
+function setOpacity(group,opacity){
+ group.visible=opacity>.008;
+ group.traverse(obj=>{
+  if(!obj.isMesh)return;
+  const materials=Array.isArray(obj.material)?obj.material:[obj.material];
+  materials.forEach(m=>{m.opacity=opacity;m.transparent=true;m.depthWrite=false});
+ });
+}
+let activeIndex=-1,scrollFrame=0,scrollProgress=0;
 function setProject(index){
  const i=clamp(index,0,projects.length-1);
  if(i===activeIndex)return;
  activeIndex=i;
- const p=projects[i],world=worlds[i];
+ const p=projects[i];
  countEl.textContent=String(i+1).padStart(2,'0')+' / '+String(projects.length).padStart(2,'0');
  titleEl.replaceChildren(document.createTextNode(p.name+' '));
  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';titleEl.appendChild(arrow);
@@ -251,32 +460,17 @@ function setProject(index){
  if(p.url){linkEl.href=p.url;linkEl.style.display='inline-flex';linkEl.textContent='View project ↗'}
  else{linkEl.removeAttribute('href');linkEl.style.display='none'}
  railButtons.forEach((button,n)=>button.setAttribute('aria-pressed',String(n===i)));
- // The external viewer supports direct focus links such as /?focus=Saturn.
- // Reload only when the user enters a new project chapter.
- const nextUrl='https://www.3dsolarsystem.net/?focus='+encodeURIComponent(world);
- if(viewer.src!==nextUrl){
-  viewer.classList.remove('loaded');
-  loadNote.style.opacity='1';
-  viewer.src=nextUrl;
- }
 }
-viewer.addEventListener('load',()=>{
- viewer.classList.add('loaded');
- loadNote.style.opacity='0';
-});
 function updateFromScroll(){
  scrollFrame=0;
- const viewport=Math.max(1,window.innerHeight);
- const progress=clamp((window.scrollY-hero.offsetTop)/viewport,0,projects.length-1);
- const current=clamp(Math.floor(progress+.5),0,projects.length-1);
- setProject(current);
- const fraction=progress/(projects.length-1);
- document.documentElement.style.setProperty('--scroll-marker',(fraction*95)+'px');
+ const vh=Math.max(1,window.innerHeight);
+ scrollProgress=clamp((window.scrollY-hero.offsetTop)/vh,0,projects.length-1);
+ const active=clamp(Math.round(scrollProgress),0,projects.length-1);
+ setProject(active);
+ const marker=(scrollProgress/(projects.length-1))*95;
+ document.documentElement.style.setProperty('--scroll-marker',marker+'px');
 }
-function requestUpdate(){
- if(scrollFrame)return;
- scrollFrame=requestAnimationFrame(updateFromScroll);
-}
+function requestUpdate(){if(!scrollFrame)scrollFrame=requestAnimationFrame(updateFromScroll)}
 function goToProject(index){
  const i=clamp(index,0,projects.length-1);
  window.scrollTo({top:hero.offsetTop+i*window.innerHeight,behavior:'smooth'});
@@ -285,11 +479,67 @@ railButtons.forEach(button=>button.addEventListener('click',()=>goToProject(Numb
 window.addEventListener('scroll',requestUpdate,{passive:true});
 window.addEventListener('resize',requestUpdate);
 window.addEventListener('keydown',event=>{
- if(event.key==='ArrowDown'&&document.activeElement.tagName!=='INPUT')goToProject(activeIndex+1);
- if(event.key==='ArrowUp'&&document.activeElement.tagName!=='INPUT')goToProject(activeIndex-1);
+ if(event.key==='ArrowDown'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){event.preventDefault();goToProject(activeIndex+1)}
+ if(event.key==='ArrowUp'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){event.preventDefault();goToProject(activeIndex-1)}
 });
 requestUpdate();
 
+// Continuous animation: objects transition by opacity and scale. No iframe or per-project network requests.
+const clock=new THREE.Clock();
+function animate(){
+ requestAnimationFrame(animate);
+ const dt=Math.min(clock.getDelta(),.05);
+ const progress=scrollProgress;
+ const from=clamp(Math.floor(progress),0,projects.length-1);
+ const to=Math.min(projects.length-1,from+1);
+ const blend=ease(progress-from);
+ projectObjects.forEach((g,i)=>{
+  let opacity=0;
+  if(from===to)opacity=(i===from)?1:0;
+  else if(i===from)opacity=1-blend;
+  else if(i===to)opacity=blend;
+  setOpacity(g,opacity);
+  if(!reducedMotion&&opacity>.01){
+   g.rotation.y+=dt*(.08+.04*i);
+   g.rotation.x=Math.sin(clock.elapsedTime*.32+i)*.035;
+  }
+  const focusScale=1.0+Math.sin(Math.PI*blend)*.045;
+  g.scale.multiplyScalar(1); // preserve responsive base scale set in layoutScene
+  if(opacity>.01)g.scale.setScalar((stage.clientWidth/stage.clientHeight<.9?.62:.92)*focusScale);
+ });
+ const pullback=1-Math.sin(Math.PI*blend)*.13;
+ const cameraBase=stage.clientWidth/stage.clientHeight<.9?28:25;
+ camera.position.z+=(cameraBase*pullback-camera.position.z)*(1-Math.exp(-dt*4));
+ camera.position.x+=(rotY*2.8-camera.position.x)*(1-Math.exp(-dt*3));
+ camera.position.y+=(rotX*2.3-camera.position.y)*(1-Math.exp(-dt*3));
+ camera.lookAt(stage.clientWidth/stage.clientHeight<.9?0:0,0,0);
+ stars.rotation.y+=reducedMotion?0:dt*.0008;
+ renderer.render(scene,camera);
+}
+animate();
+
+// Drag horizontally to rotate the active project models without stealing vertical scrolling.
+let pointerState=null;
+canvas.addEventListener('pointerdown',event=>{
+ pointerState={id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,type:event.pointerType,dragged:false};
+ if(event.pointerType==='mouse')canvas.setPointerCapture(event.pointerId);
+});
+canvas.addEventListener('pointermove',event=>{
+ if(!pointerState||pointerState.id!==event.pointerId)return;
+ const totalX=event.clientX-pointerState.x,totalY=event.clientY-pointerState.y;
+ if(Math.abs(totalX)>5||Math.abs(totalY)>5)pointerState.dragged=true;
+ if(pointerState.type==='mouse'||Math.abs(totalX)>Math.abs(totalY)*1.2){
+  const dx=event.clientX-pointerState.lastX;
+  const dy=event.clientY-pointerState.lastY;
+  projectObjects.forEach((g,i)=>{g.rotation.y+=dx*.004;g.rotation.x=clamp(g.rotation.x+dy*.002,-.45,.45)});
+ }
+ pointerState.lastX=event.clientX;pointerState.lastY=event.clientY;
+});
+function releasePointer(event){if(pointerState&&pointerState.id===event.pointerId)pointerState=null}
+canvas.addEventListener('pointerup',releasePointer);
+canvas.addEventListener('pointercancel',()=>{pointerState=null});
+
+// Theme, page navigation and reveal animations.
 const root=document.documentElement,themeButton=document.querySelector('.theme');
 function setTheme(theme){
  root.dataset.theme=theme;
@@ -297,8 +547,7 @@ function setTheme(theme){
  themeButton.textContent=theme==='dark'?'LIGHT MODE':'DARK MODE';
  document.getElementById('theme-color').content=theme==='dark'?'#05070d':'#c1c9cf';
 }
-let savedTheme='dark';
-try{savedTheme=localStorage.getItem('portfolio-theme')||'dark'}catch{}
+let savedTheme='dark';try{savedTheme=localStorage.getItem('portfolio-theme')||'dark'}catch{}
 setTheme(savedTheme);
 themeButton.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
 document.getElementById('year').textContent=new Date().getFullYear();
