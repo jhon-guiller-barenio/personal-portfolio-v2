@@ -211,6 +211,19 @@ html[data-theme=light] .solar-fallback .fallback-sun{filter:saturate(.85)}
 @media(max-width:600px){.solar-fallback{inset:32% -40% 15% -5%}.solar-fallback .fallback-orbit{border-color:#8fa6c53a}.solar-fallback .fallback-planet{width:9px}.solar-fallback[data-active] .fallback-planet{transform:translateX(-50%) rotateX(-62deg) scale(2.7)}.fallback-caption{right:34%;font-size:7px}}
 @media(prefers-reduced-motion:reduce){.solar-fallback,.solar-fallback *{animation:none!important;transition:none!important}}
 
+
+/* Cinematic scroll focus and realistic mapped planet fallback */
+.solar-fallback .fallback-planet{background-size:auto 100%;background-position:center;background-repeat:repeat-x;overflow:hidden}
+.solar-fallback .planet-a{background-image:radial-gradient(circle at 32% 28%,#ffffffa8,transparent 30%),url('https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg'),linear-gradient(135deg,#3d9ec9,#0c234b)}
+.solar-fallback .planet-b{background-image:radial-gradient(circle at 32% 28%,#ffffff88,transparent 28%),url('https://www.solarsystemscope.com/textures/download/2k_mars.jpg'),linear-gradient(135deg,#f6c58a,#762b1c)}
+.solar-fallback .planet-c{background-image:radial-gradient(circle at 32% 28%,#ffffff88,transparent 28%),url('https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg'),linear-gradient(135deg,#f1d3a0,#9c5e3b)}
+.solar-fallback .planet-d{background-image:radial-gradient(circle at 32% 28%,#ffffff88,transparent 28%),url('https://www.solarsystemscope.com/textures/download/2k_saturn.jpg'),linear-gradient(135deg,#e7c99a,#82614c)}
+.solar-fallback .planet-e{background-image:radial-gradient(circle at 32% 28%,#ffffff88,transparent 28%),url('https://www.solarsystemscope.com/textures/download/2k_uranus.jpg'),linear-gradient(135deg,#b9f4f0,#4a8fbd)}
+.solar-fallback .planet-f{background-image:radial-gradient(circle at 32% 28%,#ffffff88,transparent 28%),url('https://www.solarsystemscope.com/textures/download/2k_neptune.jpg'),linear-gradient(135deg,#7fc9ff,#172d7c)}
+.solar-fallback[data-active="0"] .planet-a,.solar-fallback[data-active="1"] .planet-b,.solar-fallback[data-active="2"] .planet-c,.solar-fallback[data-active="3"] .planet-d,.solar-fallback[data-active="4"] .planet-e,.solar-fallback[data-active="5"] .planet-f{transform:translateX(-50%) rotateX(-62deg) scale(8);box-shadow:0 0 18px currentColor,0 0 55px currentColor,0 0 110px currentColor}
+.fallback-planet{background-color:#3b8fb8!important;box-shadow:inset -10px -5px 15px #0009,inset 3px 2px 8px #ffffff88,0 0 22px currentColor}
+@media(max-width:600px){.solar-fallback[data-active] .fallback-planet{transform:translateX(-50%) rotateX(-62deg) scale(5.5)}}
+
 </style>
 </head>
 <body>
@@ -579,9 +592,24 @@ function addOrbitRing(radius){
 projects.forEach((p,i)=>{
  const radius=orbitRadii[i];addOrbitRing(radius);
  const pivot=new THREE.Group();solarSystem.add(pivot);
- const world=new THREE.Mesh(new THREE.SphereGeometry([.24,.34,.45,.38,.3,.42][i],40,28),new THREE.MeshStandardMaterial({
-  color:worldColors[i],roughness:.74,metalness:.08,emissive:worldColors[i],emissiveIntensity:.05
+ const world=new THREE.Mesh(new THREE.SphereGeometry([.24,.34,.45,.38,.3,.42][i],72,48),new THREE.MeshStandardMaterial({
+  color:worldColors[i],roughness:.82,metalness:.02,emissive:worldColors[i],emissiveIntensity:.035
  }));
+ const planetMaps=[
+  'https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg',
+  'https://www.solarsystemscope.com/textures/download/2k_mars.jpg',
+  'https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg',
+  'https://www.solarsystemscope.com/textures/download/2k_saturn.jpg',
+  'https://www.solarsystemscope.com/textures/download/2k_uranus.jpg',
+  'https://www.solarsystemscope.com/textures/download/2k_neptune.jpg'
+ ];
+ new THREE.TextureLoader().load(planetMaps[i],texture=>{
+  texture.colorSpace=THREE.SRGBColorSpace;
+  world.material.map=texture;
+  world.material.color.setHex(0xffffff);
+  world.material.roughness=i===2||i===3?.92:.78;
+  world.material.needsUpdate=true;
+ },undefined,()=>console.info('Planet texture unavailable; using procedural color.',planetMaps[i]));
  world.position.set(radius,0,0);world.rotation.z=.3+i*.18;pivot.add(world);
  const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(world.geometry.parameters.radius*1.12,32,20),new THREE.MeshBasicMaterial({color:worldColors[i],transparent:true,opacity:.12,side:THREE.BackSide}));
  atmosphere.position.copy(world.position);pivot.add(atmosphere);
@@ -630,7 +658,7 @@ function setProject(index){
  const i=clamp(index,0,projects.length-1);
  if(i===activeIndex)return;
  activeIndex=i;
- solarWorlds.forEach((entry,n)=>{entry.world.material.emissiveIntensity=(n===i ? 0.5 : 0.045);entry.world.scale.setScalar((n===i ? 1.32 : 1));entry.world.material.color.setHex((n===i ? 0xffffff : entry.color));});
+ solarWorlds.forEach((entry,n)=>{const focused=n===i;entry.world.material.emissiveIntensity=focused?.11:.025;entry.world.scale.setScalar(focused?5.2:1);entry.world.material.color.setHex(0xffffff);entry.pivot.scale.setScalar(1);entry.pivot.userData.focused=focused;});
  const p=projects[i];
  countEl.textContent=String(i+1).padStart(2,'0')+' / '+String(projects.length).padStart(2,'0');
  titleEl.replaceChildren(document.createTextNode(p.name+' '));
