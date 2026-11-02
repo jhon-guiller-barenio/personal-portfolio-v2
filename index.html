@@ -38,27 +38,101 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 .planet-info{top:43%;padding:20px}
 }
 @media(hover:none) and (pointer:coarse){.hero canvas{cursor:default}}
+
+/* Scroll-driven 3D project journey */
+.hero{height:calc(100svh * 6);min-height:0;max-height:none;position:relative;overflow:visible;background:#030509;isolation:isolate}
+.hero:after{display:none}
+.solar-stage{position:sticky;top:0;width:100%;height:100svh;min-height:560px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 72% 48%,#10182a 0%,#070a12 42%,#020306 100%)}
+.solar-stage:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#020306 0%,#020306ed 20%,#0203069c 42%,transparent 73%),linear-gradient(0deg,#020306b8 0%,transparent 22%),radial-gradient(ellipse at 78% 50%,transparent 20%,#02030655 100%)}
+.solar-stage canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;touch-action:pan-y;cursor:grab;outline:none}
+.solar-stage canvas:active{cursor:grabbing}
+.hero .hero-copy{position:absolute;z-index:3;top:50%;left:clamp(26px,7vw,120px);transform:translateY(-50%);width:min(520px,43vw);max-width:520px;pointer-events:auto}
+.hero-copy .eyebrow{font-size:.68rem;letter-spacing:.18em;color:#a9b4c7;margin-bottom:26px}
+.hero-copy .eyebrow span{color:var(--cyan)}
+.hero h1{font-size:clamp(3.3rem,6.6vw,7.4rem);line-height:.94;letter-spacing:-.085em;font-weight:500;margin:0 0 26px;overflow-wrap:anywhere}
+.hero h1 span{display:inline-block;color:#e8eef9;font-size:.66em;vertical-align:10%;margin-left:.08em;transition:transform .25s}
+.hero h1 span:hover{transform:translate(5px,-5px)}
+.hero-copy p{max-width:390px;color:#aab5c6;font-size:clamp(.9rem,1.2vw,1.05rem);line-height:1.8;min-height:4.8em;margin:0}
+.hero .hero-actions{margin-top:28px;pointer-events:auto}
+.hero .button{border-radius:3px;padding:14px 18px;letter-spacing:.01em}
+.hero .button.ghost{background:#ffffff08}
+.hero-note{margin-top:34px;font:.62rem var(--mono);letter-spacing:.09em;color:#8793a7}
+.hero-note span{color:var(--cyan)}
+.project-rail{position:absolute;z-index:5;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:5px;align-items:center;max-width:min(92vw,760px);padding:7px;border:1px solid #ffffff25;border-radius:4px;background:#080b12c9;backdrop-filter:blur(18px);overflow-x:auto;scrollbar-width:none}
+.project-rail::-webkit-scrollbar{display:none}
+.project-rail button{flex:0 0 auto;border:0;background:transparent;color:#aab5c6;padding:9px 11px;border-radius:2px;font:.65rem var(--mono);white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
+.project-rail button span{color:#69778e;margin-right:8px}
+.project-rail button[aria-pressed=true],.project-rail button:hover{background:#ffffff12;color:#fff}
+.project-rail button[aria-pressed=true] span{color:var(--cyan)}
+.bottom-hint{position:absolute;z-index:4;left:clamp(18px,3vw,44px);bottom:34px;color:#818da0;font:.6rem var(--mono);letter-spacing:.08em;pointer-events:none}
+.bottom-hint span{color:var(--cyan);font-size:.9rem;margin-right:8px}
+.scroll-marker{position:absolute;z-index:4;right:clamp(18px,4vw,58px);top:50%;height:120px;width:1px;background:#ffffff25;transform:translateY(-50%);pointer-events:none}
+.scroll-marker span{position:absolute;top:0;left:-1px;width:3px;height:25px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);transform:translateY(var(--scroll-marker,0))}
+.project-label,.hud,.controls,.planet-info{display:none!important}
+@media(max-width:900px){
+ .solar-stage{background:radial-gradient(ellipse at 70% 62%,#111a2c 0%,#070a12 46%,#020306 100%)}
+ .solar-stage:after{background:linear-gradient(180deg,#020306 0%,#020306a8 34%,transparent 75%),linear-gradient(0deg,#020306e8 0%,transparent 38%)}
+ .hero .hero-copy{top:13%;left:24px;transform:none;width:min(78%,560px)}
+ .hero-copy .eyebrow{margin-bottom:18px}
+ .hero h1{font-size:clamp(3.1rem,9vw,5.3rem);margin-bottom:14px}
+ .hero-copy p{font-size:.88rem;line-height:1.6;min-height:0;max-width:520px}
+ .hero .hero-actions{margin-top:17px}
+ .hero-note{margin-top:18px}
+ .project-rail{bottom:24px;max-width:calc(100% - 28px);left:14px;right:14px;transform:none;justify-content:flex-start}
+ .project-rail button{padding:9px 10px;font-size:.61rem}
+ .bottom-hint{bottom:84px;left:18px;font-size:.54rem}
+ .scroll-marker{right:12px;height:82px;top:56%}
+}
+@media(max-width:600px){
+ .hero{height:calc(100svh * 6)}
+ .solar-stage{min-height:620px}
+ .hero .hero-copy{top:13%;left:19px;width:calc(100% - 48px)}
+ .hero-copy .eyebrow{font-size:.59rem;letter-spacing:.13em;margin-bottom:16px}
+ .hero h1{font-size:clamp(2.8rem,12vw,4.1rem);line-height:.96;max-width:100%;margin-bottom:12px}
+ .hero-copy p{max-width:94%;font-size:.8rem;line-height:1.55}
+ .hero .hero-actions{gap:8px;margin-top:15px}
+ .hero .button{font-size:.68rem;padding:11px 13px}
+ .hero-note{font-size:.52rem;margin-top:16px;letter-spacing:.04em}
+ .project-rail{bottom:18px;padding:5px;gap:2px}
+ .project-rail button{font-size:.56rem;padding:9px 8px}
+ .project-rail button span{margin-right:5px}
+ .bottom-hint{display:none}
+ .scroll-marker{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .project-rail button,.hero h1 span{transition:none}
+}
+
 </style>
 </head>
 <body>
 <header><div class="wrap head"><a class="brand" href="#top">JGB<span>.</span></a><nav class="nav" aria-label="Main navigation"><a href="#work" class="active">Work</a><a href="#skills">Skills</a><a href="#about">About</a><a href="#contact">Contact</a></nav><div class="head-right"><span class="status">Available for opportunities</span><button class="theme" type="button">LIGHT MODE</button></div></div></header>
 <main id="top">
-<section class="hero" id="solar"><div class="load-note" id="load-note">Preparing your solar system…<br><small>Loading interactive 3D scene</small></div><canvas id="solar-canvas" aria-label="Interactive 3D solar system. Drag to rotate, scroll to zoom, click a planet to explore a project."></canvas>
-<div class="hero-copy"><div class="eyebrow">Interactive portfolio / 2026</div><h1>My work,<br>in a <em>new orbit.</em></h1><p>I'm Jhon Guiller Barenio. Explore my projects as a miniature solar system — drag to travel around the planets, zoom in, and select a world to open the work behind it.</p><div class="hero-actions"><a class="button" href="#work">Explore projects <span>↘</span></a><a class="button ghost" href="mailto:jhonguillerbarenio@gmail.com">Let's talk ↗</a></div><div class="hero-note"><span>DRAG</span> ROTATE &nbsp;·&nbsp; <span>SCROLL</span> ZOOM &nbsp;·&nbsp; <span>CLICK</span> EXPLORE</div></div>
-<a class="project-label" href="https://versa-learning.vercel.app/" target="_blank" rel="noopener"><span class="index">01</span><strong>VERSA Learning</strong><small>English learning platform ↗</small></a>
-<a class="project-label" href="https://chessroom-source.vercel.app/" target="_blank" rel="noopener"><span class="index">02</span><strong>Chessroom</strong><small>Online chess experience ↗</small></a>
-<a class="project-label" href="https://cafe-noir-xi.vercel.app/" target="_blank" rel="noopener"><span class="index">03</span><strong>Café Noir</strong><small>Café website & admin ↗</small></a>
-<a class="project-label" href="https://sakurasound.vercel.app/" target="_blank" rel="noopener"><span class="index">04</span><strong>SakuraSound</strong><small>Anime OST discovery ↗</small></a>
-<div class="project-rail" id="project-rail" role="group" aria-label="Browse portfolio projects">
-<button type="button" data-project="0" aria-pressed="false"><span>01 / LEARNING</span>VERSA</button>
-<button type="button" data-project="1" aria-pressed="false"><span>02 / MULTIPLAYER</span>Chessroom</button>
-<button type="button" data-project="2" aria-pressed="false"><span>03 / CAFE</span>Café Noir</button>
-<button type="button" data-project="3" aria-pressed="false"><span>04 / MUSIC</span>SakuraSound</button>
-<button type="button" data-project="4" aria-pressed="false"><span>05 / GAME</span>Invoker Lab</button>
-<button type="button" data-project="5" aria-pressed="false"><span>06 / HARDWARE</span>Smart Fan</button>
-</div><div class="hud">THE PROJECT SYSTEM / JGB COLLECTION</div><div class="bottom-hint">A small universe of things I've built · Sound off · Controls below</div>
-<div class="controls"><button id="pause" type="button">Ⅱ Pause</button><span class="divider"></span><button id="reset" type="button">◎ Reset view</button><span class="divider"></span><button id="labels" class="selected" type="button">⌖ Labels</button></div>
-<div class="planet-info" id="planet-info" role="dialog" aria-modal="false" aria-labelledby="info-title"><button class="close" id="info-close" aria-label="Close project details">×</button><div class="index" id="info-index">PROJECT / 01</div><h2 id="info-title">Project name</h2><p id="info-description"></p><a class="button" id="info-link" href="#" target="_blank" rel="noopener">Open project ↗</a></div>
+<section class="hero" id="solar" aria-label="Selected projects, scroll to explore">
+  <div class="solar-stage" id="solar-stage">
+    <div class="load-note" id="load-note">Preparing the project universe…<br><small>Loading real-time 3D scene</small></div>
+    <canvas id="solar-canvas" aria-label="Interactive 3D project planets. Scroll to travel between projects and drag horizontally to rotate the view."></canvas>
+    <div class="hero-copy">
+      <div class="eyebrow">SELECTED WORK / <span id="project-count">01 / 06</span></div>
+      <h1 id="project-title">VERSA Learning <span aria-hidden="true">↗</span></h1>
+      <p id="project-description">An interactive English-learning platform with lessons, pronunciation practice, and quizzes.</p>
+      <div class="hero-actions">
+        <a class="button" id="project-link" href="https://versa-learning.vercel.app/" target="_blank" rel="noopener">View project ↗</a>
+        <a class="button ghost" href="mailto:jhonguillerbarenio@gmail.com">Let's talk ↗</a>
+      </div>
+      <div class="hero-note"><span>SCROLL</span> TRAVEL BETWEEN WORLDS &nbsp;·&nbsp; <span>DRAG</span> ROTATE THE VIEW</div>
+    </div>
+    <div class="project-rail" id="project-rail" role="group" aria-label="Jump to a project">
+      <button type="button" data-project="0" aria-label="Go to project 1, VERSA" aria-pressed="true"><span>01</span>VERSA</button>
+      <button type="button" data-project="1" aria-label="Go to project 2, Chessroom" aria-pressed="false"><span>02</span>Chessroom</button>
+      <button type="button" data-project="2" aria-label="Go to project 3, Café Noir" aria-pressed="false"><span>03</span>Café Noir</button>
+      <button type="button" data-project="3" aria-label="Go to project 4, SakuraSound" aria-pressed="false"><span>04</span>SakuraSound</button>
+      <button type="button" data-project="4" aria-label="Go to project 5, Invoker Lab" aria-pressed="false"><span>05</span>Invoker Lab</button>
+      <button type="button" data-project="5" aria-label="Go to project 6, Arduino Smart Fan" aria-pressed="false"><span>06</span>Smart Fan</button>
+    </div>
+    <div class="bottom-hint"><span>↓</span> SCROLL TO EXPLORE · EACH WORLD HAS ITS OWN STORY</div>
+    <div class="scroll-marker" aria-hidden="true"><span></span></div>
+  </div>
 </section>
 <div class="marquee"><div class="marquee-track"><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span><span>Web development</span><span>Creative coding</span><span>IT support</span><span>Interactive projects</span><span>Arduino experiments</span></div></div>
 <section class="wrap section" id="work"><div class="section-head reveal"><div><div class="eyebrow">A closer look</div><h2>Selected projects<span style="color:var(--cyan)">.</span></h2></div><span class="section-number">01 — 06</span></div><div class="project-grid">
@@ -76,44 +150,298 @@ html[data-theme=light]{color-scheme:light;--bg:#c1c9cf;--panel:#d0d7dc;--line:#9
 <footer class="wrap footer"><span>© <span id="year"></span> Jhon Guiller Barenio</span><div class="footer-links"><a href="https://github.com/jhon-guiller-barenio" target="_blank" rel="noopener">GitHub ↗</a><a href="mailto:jhonguillerbarenio@gmail.com">Email ↗</a><a href="#top">Back to top ↑</a></div></footer>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js';
-const canvas=document.getElementById('solar-canvas'),hero=document.querySelector('.hero'),loadNote=document.getElementById('load-note');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.35:1.75));renderer.setSize(hero.clientWidth,hero.clientHeight,false);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
-const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x05070d,.0017);
-const camera=new THREE.PerspectiveCamera(43,hero.clientWidth/hero.clientHeight,.1,1200);camera.position.set(0,32,112);
-scene.add(new THREE.AmbientLight(0x8fa9d4,.58));const sunLight=new THREE.PointLight(0xffd7a0,2400,600,1.5);scene.add(sunLight);
-const system=new THREE.Group();scene.add(system);const planets=[];const raycaster=new THREE.Raycaster();const pointer=new THREE.Vector2();let selected=null,focusedPlanet=null,paused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,showLabels=true,dragging=false,downX=0,downY=0,lastX=0,lastY=0,rotX=-.12,rotY=-.2,zoom=1,targetZoom=1,downTime=0;const cameraTarget=new THREE.Vector3(),focusTarget=new THREE.Vector3();const activePointers=new Map();let pinchStartDistance=0,pinchStartZoom=1,pointerMoved=false;
-function seeded(n){let x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)}
-function texture(kind,base,seed){const c=document.createElement('canvas');c.width=1024;c.height=512;const x=c.getContext('2d');x.fillStyle=base;x.fillRect(0,0,c.width,c.height);const pal={sun:['#fff3b0','#ffb22e','#f15b21','#fff8d6'],blue:['#b8dff5','#4f91bd','#23516f','#e2f6ff'],red:['#f6b28a','#b95336','#672c2c','#d8a07c'],gold:['#f7dfad','#bda16c','#6e604f','#e9d5a3'],earth:['#70b4dc','#1c5684','#39834e','#d9e8e9'],ice:['#d8ecf7','#8db6cb','#547d96','#f5fbff'],gas:['#e7c7a2','#9f7155','#d7ae80','#f1e1c6'],purple:['#b7a5f2','#68559d','#312b59','#d3c7ff']};const colors=pal[kind]||pal.blue;if(kind==='gas'||kind==='sun'){for(let i=0;i<110;i++){const y=seeded(seed+i)*512;x.fillStyle=colors[i%colors.length];x.globalAlpha=.08+seeded(i+seed)*.19;x.fillRect(0,y,1024,2+seeded(i*4)*12)}x.globalAlpha=1}else{for(let i=0;i<1700;i++){const xx=seeded(seed+i)*1024,yy=seeded(seed+i*2+5)*512,w=3+seeded(i+seed)*65,h=1+seeded(i+seed*2)*8;x.globalAlpha=.08+seeded(i+3)*.22;x.fillStyle=colors[i%colors.length];x.beginPath();x.ellipse(xx,yy,w,h,seeded(i)*2,0,Math.PI*2);x.fill()}x.globalAlpha=1;if(kind==='earth'){for(let i=0;i<42;i++){const xx=seeded(i+81)*1024,yy=seeded(i+22)*512;x.fillStyle=colors[2];x.globalAlpha=.65;x.beginPath();x.ellipse(xx,yy,12+seeded(i)*50,7+seeded(i+9)*24,seeded(i+2)*3,0,Math.PI*2);x.fill()}x.globalAlpha=1}}const im=x.getImageData(0,0,1024,512);for(let i=0;i<im.data.length;i+=4){const noise=(Math.random()-.5)*12;im.data[i]=Math.max(0,Math.min(255,im.data[i]+noise));im.data[i+1]=Math.max(0,Math.min(255,im.data[i+1]+noise));im.data[i+2]=Math.max(0,Math.min(255,im.data[i+2]+noise))}x.putImageData(im,0,0);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
-function makePlanetTexture(type,seed){return texture(type,'#25354b',seed)}
-function sphereMaterial(type,seed,rough=.85){return new THREE.MeshStandardMaterial({map:makePlanetTexture(type,seed),roughness:rough,metalness:.04})}
-function addOrbit(radius){const pts=[];for(let i=0;i<=256;i++){const a=i/256*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*radius,0,Math.sin(a)*radius))}const geo=new THREE.BufferGeometry().setFromPoints(pts);const line=new THREE.LineLoop(geo,new THREE.LineBasicMaterial({color:0x9bb6d4,transparent:true,opacity:.18}));system.add(line)}
-function addPlanet(d){const pivot=new THREE.Group();system.add(pivot);const mesh=new THREE.Mesh(new THREE.SphereGeometry(d.r,72,48),sphereMaterial(d.texture,d.seed,d.rough||.8));mesh.position.x=d.orbit;pivot.add(mesh);mesh.rotation.z=d.tilt||0;mesh.rotation.y=d.seed*.4;mesh.userData.project=d;mesh.castShadow=false;mesh.receiveShadow=true;if(d.atmosphere){const at=new THREE.Mesh(new THREE.SphereGeometry(d.r*1.045,64,40),new THREE.MeshBasicMaterial({color:d.atmosphere,transparent:true,opacity:.13,side:THREE.BackSide}));at.position.copy(mesh.position);pivot.add(at)}if(d.ring){const ring=new THREE.Mesh(new THREE.RingGeometry(d.r*1.35,d.r*2.15,128),new THREE.MeshStandardMaterial({color:0xc5b89b,roughness:.9,metalness:.1,side:THREE.DoubleSide,transparent:true,opacity:.72}));ring.rotation.x=Math.PI/2.35;ring.position.copy(mesh.position);pivot.add(ring)}addOrbit(d.orbit);const initialAngle=d.angle||Math.random()*Math.PI*2;const p={...d,pivot,mesh,initialAngle,angle:initialAngle};planets.push(p);return p}
-const sunGeo=new THREE.SphereGeometry(5.2,96,64),sunMat=new THREE.MeshBasicMaterial({map:makePlanetTexture('sun',99),color:0xffd7a0});const sun=new THREE.Mesh(sunGeo,sunMat);system.add(sun);const corona=new THREE.Sprite(new THREE.SpriteMaterial({map:(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d'),g=x.createRadialGradient(128,128,8,128,128,128);g.addColorStop(0,'#fff6cfcc');g.addColorStop(.16,'#ffbd4e88');g.addColorStop(.45,'#f9822d35');g.addColorStop(1,'#f9822d00');x.fillStyle=g;x.fillRect(0,0,256,256);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));corona.scale.set(28,28,1);sun.add(corona);
+
+const canvas=document.getElementById('solar-canvas');
+const hero=document.getElementById('solar');
+const stage=document.getElementById('solar-stage');
+const loadNote=document.getElementById('load-note');
+const titleEl=document.getElementById('project-title');
+const countEl=document.getElementById('project-count');
+const descriptionEl=document.getElementById('project-description');
+const linkEl=document.getElementById('project-link');
+const railButtons=[...document.querySelectorAll('[data-project]')];
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const data=[
-{name:'VERSA Learning',kind:'01 / LEARNING PLATFORM',description:'An interactive English-learning platform with lessons, practice activities, pronunciation exercises, and quiz flows.',url:'https://versa-learning.vercel.app/',texture:'earth',r:2.15,orbit:13,period:.34,seed:7,atmosphere:0x7dcfff,rough:.7},
-{name:'Chessroom',kind:'02 / MULTIPLAYER GAME',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/',texture:'ice',r:2.7,orbit:21,period:.25,seed:18,ring:true,atmosphere:0xa3c8ff},
-{name:'Café Noir',kind:'03 / CAFE WEBSITE',description:'A café storefront with a distinct visual identity and a separate admin area for site management.',url:'https://cafe-noir-xi.vercel.app/',texture:'gold',r:3.2,orbit:30,period:.18,seed:29,atmosphere:0xffd6a0},
-{name:'SakuraSound',kind:'04 / MUSIC DISCOVERY',description:'An anime soundtrack discovery app featuring search, artwork, and a persistent music-player experience.',url:'https://sakurasound.vercel.app/',texture:'purple',r:2.55,orbit:40,period:.13,seed:41,atmosphere:0xb99bff},
-{name:'Invoker Lab',kind:'05 / BROWSER GAME',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities.',url:'/projects/invoker-lab/',texture:'red',r:2.1,orbit:49,period:.1,seed:54,atmosphere:0xff9675},
-{name:'Arduino Smart Fan',kind:'06 / HARDWARE + SOFTWARE',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD, and Bluetooth controls.',url:null,texture:'gas',r:3.1,orbit:58,period:.075,seed:66,ring:true}
+ {name:'VERSA Learning',kind:'LEARNING PLATFORM',description:'An interactive English-learning platform with lessons, pronunciation practice, and quizzes designed to make learning more engaging.',url:'https://versa-learning.vercel.app/',palette:'earth',r:3.2,orbit:13,angle:.4,seed:7,atmosphere:0x7dcfff},
+ {name:'Chessroom',kind:'MULTIPLAYER GAME',description:'A browser-based chess experience with online rooms, game clocks, rematches, and focused gameplay.',url:'https://chessroom-source.vercel.app/',palette:'ice',r:3.7,orbit:21,angle:2.1,seed:18,ring:true,atmosphere:0xa3c8ff},
+ {name:'Café Noir',kind:'CAFE WEBSITE',description:'A café storefront with a distinct visual identity and a separate admin area for practical site management.',url:'https://cafe-noir-xi.vercel.app/',palette:'gold',r:4.1,orbit:30,angle:3.7,seed:29,atmosphere:0xffd6a0},
+ {name:'SakuraSound',kind:'MUSIC DISCOVERY',description:'An anime soundtrack discovery app featuring music search, album artwork, and a persistent player experience.',url:'https://sakurasound.vercel.app/',palette:'purple',r:3.6,orbit:40,angle:5.4,seed:41,atmosphere:0xb99bff},
+ {name:'Invoker Lab',kind:'BROWSER GAME',description:'A keyboard-driven spell practice game built around learning combinations and testing abilities against a training dummy.',url:'/projects/invoker-lab/',palette:'red',r:3.1,orbit:49,angle:1.3,seed:54,atmosphere:0xff9675},
+ {name:'Arduino Smart Fan',kind:'HARDWARE + SOFTWARE',description:'A temperature-responsive fan prototype using an LM35 sensor, Arduino, motor driver, LCD display, and Bluetooth controls.',url:null,palette:'steel',r:4.0,orbit:58,angle:4.5,seed:66,ring:true}
 ];
-data.forEach((d,i)=>{d.angle=[.4,2.1,3.7,5.4,1.3,4.5][i];addPlanet(d)});document.querySelectorAll('[data-project]').forEach(button=>button.addEventListener('click',()=>selectProject(data[Number(button.dataset.project)])));
-const starGeo=new THREE.BufferGeometry(),starPos=[],starCol=[];for(let i=0;i<3500;i++){const radius=90+Math.random()*420,theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1);starPos.push(radius*Math.sin(phi)*Math.cos(theta),radius*Math.cos(phi),radius*Math.sin(phi)*Math.sin(theta));const v=.45+Math.random()*.55;starCol.push(v*.78,v*.88,v)}starGeo.setAttribute('position',new THREE.Float32BufferAttribute(starPos,3));starGeo.setAttribute('color',new THREE.Float32BufferAttribute(starCol,3));const stars=new THREE.Points(starGeo,new THREE.PointsMaterial({size:.65,vertexColors:true,transparent:true,opacity:.86,sizeAttenuation:true}));scene.add(stars);
-const nebulae=[];for(let i=0;i<4;i++){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),g=x.createRadialGradient(64,64,1,64,64,64);g.addColorStop(0,i%2?'#4e5aaf25':'#398b9b24');g.addColorStop(1,'#00000000');x.fillStyle=g;x.fillRect(0,0,128,128);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));s.position.set((Math.random()-.5)*180,(Math.random()-.5)*90,-100-Math.random()*90);s.scale.set(90,65,1);scene.add(s);nebulae.push(s)}
-const resize=()=>{const w=hero.clientWidth,h=hero.clientHeight;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w<700?1.35:1.75));renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=camera.aspect<.95?Math.min(82,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(43/2))/Math.max(.42,camera.aspect)))):43;camera.updateProjectionMatrix()};new ResizeObserver(resize).observe(hero);
-function applyCamera(){const distance=112/zoom;camera.position.set(cameraTarget.x+Math.sin(rotY)*Math.cos(rotX)*distance,cameraTarget.y+Math.sin(rotX)*distance,cameraTarget.z+Math.cos(rotY)*Math.cos(rotX)*distance);camera.lookAt(cameraTarget)}applyCamera();
-function selectProject(p){selected=p;focusedPlanet=planets.find(item=>item.name===p.name)||null;if(focusedPlanet){focusedPlanet.mesh.getWorldPosition(focusTarget);targetZoom=3.2}document.querySelectorAll('[data-project]').forEach(button=>{const active=Number(button.dataset.project)===data.findIndex(item=>item.name===p.name);button.setAttribute('aria-pressed',String(active));if(active)button.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'})});document.getElementById('info-index').textContent=p.kind;document.getElementById('info-title').textContent=p.name;document.getElementById('info-description').textContent=p.description;const link=document.getElementById('info-link');if(p.url){link.href=p.url;link.style.display='inline-flex';link.textContent='Open project ↗'}else{link.style.display='none'}document.getElementById('planet-info').classList.add('open')}
-function closeInfo(){document.getElementById('planet-info').classList.remove('open');selected=null;focusedPlanet=null;focusTarget.set(0,0,0);targetZoom=1;document.querySelectorAll('[data-project]').forEach(button=>button.setAttribute('aria-pressed','false'))}
-document.getElementById('info-close').addEventListener('click',closeInfo);window.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfo();if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const current=selected?data.findIndex(item=>item.name===selected.name):-1;const next=(current+(e.key==='ArrowRight'?1:-1)+data.length)%data.length;selectProject(data[next])}});
-canvas.addEventListener('pointerdown',e=>{activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);if(activePointers.size===1){dragging=true;downX=lastX=e.clientX;downY=lastY=e.clientY;downTime=performance.now();pointerMoved=false}else if(activePointers.size===2){dragging=false;pointerMoved=true;const points=[...activePointers.values()];pinchStartDistance=Math.hypot(points[1].x-points[0].x,points[1].y-points[0].y);pinchStartZoom=targetZoom}});
-canvas.addEventListener('pointermove',e=>{if(!activePointers.has(e.pointerId))return;activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activePointers.size>=2){const points=[...activePointers.values()];const distance=Math.hypot(points[1].x-points[0].x,points[1].y-points[0].y);if(pinchStartDistance>0)targetZoom=Math.max(.7,Math.min(5,pinchStartZoom*distance/pinchStartDistance));pointerMoved=true;return}if(!dragging)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;if(Math.hypot(e.clientX-downX,e.clientY-downY)>5)pointerMoved=true;rotY-=dx*.005;rotX=Math.max(-1.25,Math.min(1.25,rotX+dy*.004));lastX=e.clientX;lastY=e.clientY;applyCamera()});
-function finishPointer(e,allowClick){const wasSingle=activePointers.size===1;activePointers.delete(e.pointerId);if(wasSingle&&allowClick&&!pointerMoved&&performance.now()-downTime<450){const rect=canvas.getBoundingClientRect();pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(planets.map(p=>p.mesh),false);if(hits.length)selectProject(hits[0].object.userData.project)}dragging=false;if(activePointers.size===1){const point=[...activePointers.values()][0];lastX=downX=point.x;lastY=downY=point.y;dragging=true;pointerMoved=true}else if(activePointers.size===0)pinchStartDistance=0}
-canvas.addEventListener('pointerup',e=>finishPointer(e,true));canvas.addEventListener('pointercancel',e=>finishPointer(e,false));
-canvas.addEventListener('wheel',e=>{e.preventDefault();targetZoom=Math.max(.7,Math.min(5,targetZoom*Math.exp(-e.deltaY*.001)))},{passive:false});
-document.getElementById('pause').addEventListener('click',e=>{paused=!paused;e.currentTarget.textContent=paused?'▶ Play':'Ⅱ Pause';e.currentTarget.classList.toggle('selected',paused)});
-document.getElementById('reset').addEventListener('click',()=>{rotX=-.12;rotY=-.2;zoom=1;targetZoom=1;cameraTarget.set(0,0,0);focusTarget.set(0,0,0);focusedPlanet=null;planets.forEach(p=>{p.angle=p.initialAngle;p.pivot.rotation.y=p.angle});applyCamera();closeInfo()});
-document.getElementById('labels').addEventListener('click',e=>{showLabels=!showLabels;document.querySelectorAll('.project-label').forEach(el=>el.style.display=showLabels?'block':'none');e.currentTarget.classList.toggle('selected',showLabels)});
-let previous=0;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!paused){sun.rotation.y+=dt*.05;planets.forEach(p=>{p.angle+=dt*p.period;p.pivot.rotation.y=p.angle;p.mesh.rotation.y+=dt*.12});stars.rotation.y+=dt*.0015;nebulae.forEach((n,i)=>n.material.rotation+=dt*(i%2?.004:-.003))}if(focusedPlanet)focusedPlanet.mesh.getWorldPosition(focusTarget);cameraTarget.lerp(focusTarget,1-Math.exp(-dt*4));zoom+=(targetZoom-zoom)*(1-Math.exp(-dt*4));applyCamera();renderer.render(scene,camera)}requestAnimationFrame(animate);loadNote.style.display='none';const pauseButton=document.getElementById('pause');pauseButton.textContent=paused?'▶ Play':'Ⅱ Pause';pauseButton.classList.toggle('selected',paused);
-const root=document.documentElement,themeButton=document.querySelector('.theme');function setTheme(t){root.dataset.theme=t;localStorage.setItem('portfolio-theme',t);themeButton.textContent=t==='dark'?'LIGHT MODE':'DARK MODE';document.getElementById('theme-color').content=t==='dark'?'#05070d':'#c1c9cf'}setTheme(root.dataset.theme||'dark');themeButton.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));document.getElementById('year').textContent=new Date().getFullYear();const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));const navLinks=[...document.querySelectorAll('.nav a')];const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);const navObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-30% 0px -60% 0px'});sections.forEach(s=>navObs.observe(s));
+hero.style.height=(data.length*100)+'svh';
+
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.2:1.65));
+renderer.setSize(stage.clientWidth,stage.clientHeight,false);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.12;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x03060c,.0011);
+const camera=new THREE.PerspectiveCamera(43,stage.clientWidth/stage.clientHeight,.1,1600);
+scene.add(new THREE.AmbientLight(0x8fa9d4,.72));
+const keyLight=new THREE.PointLight(0xffe0b4,1900,850,1.6);
+keyLight.position.set(-35,48,46);scene.add(keyLight);
+const rimLight=new THREE.PointLight(0x657eff,1250,700,1.7);
+rimLight.position.set(38,12,-38);scene.add(rimLight);
+const fillLight=new THREE.PointLight(0x58dce7,620,500,1.8);
+fillLight.position.set(-45,-20,-10);scene.add(fillLight);
+
+const system=new THREE.Group();scene.add(system);
+const planets=[];
+const raycaster=new THREE.Raycaster();
+const pointer=new THREE.Vector2();
+const cameraTarget=new THREE.Vector3();
+const focusTarget=new THREE.Vector3();
+const cameraRight=new THREE.Vector3();
+let rotX=.12,rotY=.12,zoom=1,targetZoom=1;
+let timelineProgress=0,activeIndex=0,lastActiveIndex=-1;
+let dragState=null,dragged=false;
+let scrollFrame=0;
+
+function seeded(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+const palettes={
+ earth:['#102f46','#1a526b','#347f7e','#75a99a','#b5c6b5','#263e5d'],
+ ice:['#17213c','#293c61','#536d9c','#8fa8d1','#d1d9e9','#39435f'],
+ gold:['#2b201d','#594231','#86623e','#bf925a','#e2c18a','#423c3b'],
+ purple:['#191731','#302a59','#51447c','#7963ab','#b2a0db','#3b345d'],
+ red:['#291923','#572839','#8c3b4c','#bd5c55','#e29a78','#453247'],
+ steel:['#172b38','#294755','#456776','#7295a0','#b3c7c4','#34404e']
+};
+
+function makeFacetGeometry(radius,seed,palette){
+ const geo=new THREE.IcosahedronGeometry(radius,2).toNonIndexed();
+ const pos=geo.attributes.position;
+ for(let i=0;i<pos.count;i++){
+  const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);
+  const key=Math.round(x*997)+Math.round(y*991)*7+Math.round(z*983)*13;
+  const factor=.91+seeded(seed+key)*.19;
+  pos.setXYZ(i,x*factor,y*factor,z*factor);
+ }
+ geo.computeVertexNormals();
+ const colors=[];
+ for(let i=0;i<pos.count;i+=3){
+  const shade=palette[Math.floor(seeded(seed+i*1.73)*palette.length)];
+  const c=new THREE.Color(shade);
+  const variation=.78+seeded(seed+i*2.31)*.36;
+  c.multiplyScalar(variation);
+  for(let v=0;v<3;v++)colors.push(c.r,c.g,c.b);
+ }
+ geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+ geo.computeBoundingSphere();
+ return geo;
+}
+function addOrbit(radius,angle){
+ const pts=[];
+ for(let i=0;i<=300;i++){
+  const a=i/300*Math.PI*2;
+  pts.push(new THREE.Vector3(Math.cos(a)*radius,Math.sin(a)*radius*.12,Math.sin(a)*radius*.7));
+ }
+ const line=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x8096b6,transparent:true,opacity:.12}));
+ line.rotation.y=angle*.08;system.add(line);
+}
+function addPlanet(d,i){
+ const pivot=new THREE.Group();
+ const x=Math.cos(d.angle)*d.orbit;
+ const z=Math.sin(d.angle)*d.orbit*.68;
+ const y=Math.sin(d.angle*1.7)*d.orbit*.12;
+ pivot.position.set(x,y,z);
+ system.add(pivot);
+ const geo=makeFacetGeometry(d.r,d.seed,palettes[d.palette]);
+ const material=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.62,metalness:.2,flatShading:true});
+ const mesh=new THREE.Mesh(geo,material);
+ mesh.rotation.set(seeded(d.seed)*.4,seeded(d.seed+2)*Math.PI,seeded(d.seed+4)*.4);
+ mesh.userData.projectIndex=i;
+ mesh.castShadow=false;mesh.receiveShadow=true;
+ pivot.add(mesh);
+ const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,16),new THREE.LineBasicMaterial({color:0x101827,transparent:true,opacity:.62}));
+ mesh.add(edges);
+ if(d.atmosphere){
+  const shell=new THREE.Mesh(new THREE.IcosahedronGeometry(d.r*1.055,2),new THREE.MeshBasicMaterial({color:d.atmosphere,transparent:true,opacity:.045,side:THREE.BackSide}));
+  pivot.add(shell);
+ }
+ if(d.ring){
+  const ring=new THREE.Mesh(new THREE.RingGeometry(d.r*1.35,d.r*2.05,96),new THREE.MeshStandardMaterial({color:0xb4c5d6,roughness:.88,metalness:.12,side:THREE.DoubleSide,transparent:true,opacity:.48}));
+  ring.rotation.set(Math.PI/2.35,.2,.18);pivot.add(ring);
+ }
+ const p={...d,pivot,mesh,basePosition:pivot.position.clone()};
+ planets.push(p);
+ addOrbit(d.orbit,d.angle);
+ return p;
+}
+data.forEach(addPlanet);
+
+// A small 3D sun and distant orbital debris keep the project worlds inside one universe.
+const sun=new THREE.Mesh(new THREE.IcosahedronGeometry(5.6,3),new THREE.MeshBasicMaterial({color:0xffd59b}));
+sun.position.set(0,0,0);system.add(sun);
+const coronaCanvas=document.createElement('canvas');coronaCanvas.width=coronaCanvas.height=256;
+const cc=coronaCanvas.getContext('2d');
+const gradient=cc.createRadialGradient(128,128,5,128,128,128);
+gradient.addColorStop(0,'#fff3d5dd');gradient.addColorStop(.2,'#ffbd5988');gradient.addColorStop(.5,'#ef85312b');gradient.addColorStop(1,'#ef853100');
+cc.fillStyle=gradient;cc.fillRect(0,0,256,256);
+const coronaTexture=new THREE.CanvasTexture(coronaCanvas);coronaTexture.colorSpace=THREE.SRGBColorSpace;
+const corona=new THREE.Sprite(new THREE.SpriteMaterial({map:coronaTexture,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+corona.scale.set(32,32,1);sun.add(corona);
+
+const starPositions=[],starColors=[];
+for(let i=0;i<5200;i++){
+ const r=110+Math.random()*650,theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1);
+ starPositions.push(r*Math.sin(phi)*Math.cos(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(theta));
+ const v=.45+Math.random()*.55;starColors.push(v*.78,v*.88,v);
+}
+const starGeometry=new THREE.BufferGeometry();
+starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));
+starGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
+const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:.72,vertexColors:true,transparent:true,opacity:.85,sizeAttenuation:true}));
+scene.add(stars);
+
+const dust=[];
+for(let i=0;i<5;i++){
+ const particle=new THREE.Mesh(new THREE.IcosahedronGeometry(.22+Math.random()*.36,1),new THREE.MeshStandardMaterial({color:i%2?0x6a86b2:0xb4c5d9,roughness:.9,flatShading:true}));
+ particle.position.set((Math.random()-.5)*150,(Math.random()-.5)*70,(Math.random()-.5)*100);
+ scene.add(particle);dust.push(particle);
+}
+
+function resize(){
+ const w=stage.clientWidth,h=stage.clientHeight;
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w<700?1.2:1.65));
+ renderer.setSize(w,h,false);
+ camera.aspect=w/h;
+ camera.fov=camera.aspect<.9?Math.min(76,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(43/2))/.62))):43;
+ camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function smoothstep(v){return v*v*(3-2*v)}
+function updateProjectCopy(index){
+ if(index===lastActiveIndex)return;
+ lastActiveIndex=index;activeIndex=index;
+ const d=data[index];
+ countEl.textContent=String(index+1).padStart(2,'0')+' / '+String(data.length).padStart(2,'0');
+ titleEl.innerHTML='';
+ const name=document.createTextNode(d.name+' ');
+ titleEl.appendChild(name);
+ const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';titleEl.appendChild(arrow);
+ descriptionEl.textContent=d.description;
+ if(d.url){linkEl.href=d.url;linkEl.style.display='inline-flex';linkEl.textContent='View project ↗';}
+ else{linkEl.removeAttribute('href');linkEl.style.display='none';}
+ railButtons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
+}
+function refreshTimeline(){
+ const viewport=Math.max(1,window.innerHeight);
+ const maxIndex=data.length-1;
+ timelineProgress=clamp((window.scrollY-hero.offsetTop)/viewport,0,maxIndex);
+ const lower=Math.min(maxIndex-1,Math.floor(timelineProgress));
+ const blend=maxIndex===0?0:smoothstep(timelineProgress-lower);
+ const next=Math.min(maxIndex,lower+1);
+ const from=planets[lower].pivot.position;
+ const to=planets[next].pivot.position;
+ const blended=from.clone().lerp(to,blend);
+ // Keep the selected planet on the right half, leaving clear space for the project copy.
+ cameraRight.set(Math.cos(rotY),0,-Math.sin(rotY)).normalize();
+ const framing=window.innerWidth<700?3.8:7.2;
+ focusTarget.copy(blended).addScaledVector(cameraRight,-framing);
+ // Each project is a close-up. The slight pull-back between steps makes the hand-off legible.
+ targetZoom=4.55-Math.sin(blend*Math.PI)*1.25;
+ const nextIndex=clamp(Math.round(timelineProgress),0,maxIndex);
+ updateProjectCopy(nextIndex);
+ document.documentElement.style.setProperty('--scroll-marker',(timelineProgress/maxIndex*95)+'px');
+}
+function goToProject(index){
+ const i=clamp(index,0,data.length-1);
+ window.scrollTo({top:hero.offsetTop+i*window.innerHeight,behavior:'smooth'});
+}
+railButtons.forEach((button)=>button.addEventListener('click',()=>goToProject(Number(button.dataset.project))));
+window.addEventListener('scroll',()=>{
+ if(scrollFrame)return;
+ scrollFrame=requestAnimationFrame(()=>{scrollFrame=0;refreshTimeline()});
+},{passive:true});
+window.addEventListener('resize',refreshTimeline);
+refreshTimeline();
+
+function applyCamera(){
+ const distance=112/zoom;
+ camera.position.set(
+  cameraTarget.x+Math.sin(rotY)*Math.cos(rotX)*distance,
+  cameraTarget.y+Math.sin(rotX)*distance,
+  cameraTarget.z+Math.cos(rotY)*Math.cos(rotX)*distance
+ );
+ camera.lookAt(cameraTarget);
+}
+let previous=0;
+function animate(now){
+ requestAnimationFrame(animate);
+ const dt=Math.min((now-previous)/1000,.05);previous=now;
+ const follow=1-Math.exp(-dt*3.2);
+ cameraTarget.lerp(focusTarget,follow);
+ zoom+=(targetZoom-zoom)*follow;
+ if(!reducedMotion){
+  planets.forEach((p,i)=>{p.mesh.rotation.y+=dt*(.045+i*.004);p.mesh.rotation.x+=dt*.008});
+  sun.rotation.y+=dt*.035;stars.rotation.y+=dt*.00055;
+  dust.forEach((p,i)=>{p.rotation.x+=dt*.08;p.rotation.y+=dt*.12});
+ }
+ applyCamera();
+ renderer.render(scene,camera);
+}
+requestAnimationFrame(animate);
+
+// Horizontal pointer movement rotates the real 3D camera; vertical touch remains native page scrolling.
+canvas.addEventListener('pointerdown',e=>{
+ if(e.pointerType==='mouse')canvas.setPointerCapture(e.pointerId);
+ dragState={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,pointerType:e.pointerType};
+ dragged=false;
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!dragState||dragState.id!==e.pointerId)return;
+ const dx=e.clientX-dragState.lastX,dy=e.clientY-dragState.lastY;
+ if(Math.abs(e.clientX-dragState.x)+Math.abs(e.clientY-dragState.y)>5)dragged=true;
+ if(dragState.pointerType==='mouse'||Math.abs(e.clientX-dragState.x)>Math.abs(e.clientY-dragState.y)*1.15){
+  rotY-=dx*.0045;rotX=clamp(rotX+dy*.0035,-.9,.9);
+ }
+ dragState.lastX=e.clientX;dragState.lastY=e.clientY;
+});
+function endPointer(e){
+ if(!dragState||dragState.id!==e.pointerId)return;
+ if(!dragged){
+  const rect=canvas.getBoundingClientRect();
+  pointer.x=((e.clientX-rect.left)/rect.width)*2-1;
+  pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  const hits=raycaster.intersectObjects(planets.map(p=>p.mesh),false);
+  if(hits.length)goToProject(hits[0].object.userData.projectIndex);
+ }
+ dragState=null;
+}
+canvas.addEventListener('pointerup',endPointer);
+canvas.addEventListener('pointercancel',()=>{dragState=null});
+
+// Theme, page navigation and reveal animations.
+const root=document.documentElement,themeButton=document.querySelector('.theme');
+function setTheme(t){
+ root.dataset.theme=t;
+ try{localStorage.setItem('portfolio-theme',t)}catch{}
+ themeButton.textContent=t==='dark'?'LIGHT MODE':'DARK MODE';
+ document.getElementById('theme-color').content=t==='dark'?'#05070d':'#c1c9cf';
+}
+let savedTheme='dark';
+try{savedTheme=localStorage.getItem('portfolio-theme')||'dark'}catch{}
+setTheme(savedTheme);
+themeButton.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
+document.getElementById('year').textContent=new Date().getFullYear();
+const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+ if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}
+}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+const navLinks=[...document.querySelectorAll('.nav a')];
+const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const navObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+ if(entry.isIntersecting)navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));
+}),{rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(section=>navObserver.observe(section));
+loadNote.style.display='none';
 </script>
 </body></html>
