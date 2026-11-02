@@ -501,7 +501,7 @@ function setProject(index){
  const i=clamp(index,0,projects.length-1);
  if(i===activeIndex)return;
  activeIndex=i;
- solarWorlds.forEach((entry,n)=>{entry.world.material.emissiveIntensity=n===i?.5:.045;entry.world.scale.setScalar(n===i?1.32:1);entry.world.material.color.setHex(n===i?0xffffff:entry.color);});
+ solarWorlds.forEach((entry,n)=>{entry.world.material.emissiveIntensity=(n===i ? 0.5 : 0.045);entry.world.scale.setScalar((n===i ? 1.32 : 1));entry.world.material.color.setHex((n===i ? 0xffffff : entry.color));});
  const p=projects[i];
  countEl.textContent=String(i+1).padStart(2,'0')+' / '+String(projects.length).padStart(2,'0');
  titleEl.replaceChildren(document.createTextNode(p.name+' '));
